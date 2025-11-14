@@ -33,19 +33,19 @@ const server = http.createServer(async (req, res) => {
 
     // Extract title from first H1
     const titleMatch = content.match(/^#\s+(.+)$/m);
-    const pageTitle = titleMatch ? titleMatch[1] : 'Documentation';
+    const pageTitle = titleMatch ? titleMatch[1] : 'A cool web site!';
 
     // Convert to HTML
     const html = marked.parse(content);
 
     // Send response with nice styling
-    res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(`<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle}</title>
+  <title>nihiven.dev >>> ${pageTitle}</title>
   <style>
     body {
       max-width: 800px;
@@ -112,10 +112,9 @@ const server = http.createServer(async (req, res) => {
 ${html}
 </body>
 </html>`);
-
   } catch (err) {
     if (err.code === 'ENOENT') {
-      res.writeHead(404, {'Content-Type': 'text/html'});
+      res.writeHead(404, { 'Content-Type': 'text/html' });
       res.end(`<!DOCTYPE html>
 <html>
 <head><title>404 Not Found</title></head>
@@ -126,7 +125,7 @@ ${html}
 </body>
 </html>`);
     } else {
-      res.writeHead(500, {'Content-Type': 'text/html'});
+      res.writeHead(500, { 'Content-Type': 'text/html' });
       res.end(`<!DOCTYPE html>
 <html>
 <head><title>500 Error</title></head>

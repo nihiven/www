@@ -1,1 +1,1 @@
-node server.js
+node \\mentat\mediaone\www\keryx.nvn.io\server.js \\mentat\mediaone\www\keryx.nvn.io\md

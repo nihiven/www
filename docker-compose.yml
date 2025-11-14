@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Keryx
+  keryx:
+    image: node:latest
+    container_name: keryx-nvn-io
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32790
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/keryx.nvn.io:/app
+    command: sh -c "npm install marked && node server.js md"
+
+  # nvn.io
+  nvn-io:
+    image: node:latest
+    container_name: nvn-io
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32791
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/nvn.io:/app
+    command: sh -c "npm install marked && node server.js md"
+
+  # JustinBehanna.com
+  justinbehanna:
+    image: node:latest
+    container_name: justinbehanna-com
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32792
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/justinbehanna.com:/app
+    command: sh -c "npm install marked && node server.js md"
+
+  nihiven-xxx:
+    image: node:latest
+    container_name: nihiven-xxx
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32793
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/nihiven.xxx:/app
+    command: sh -c "npm install marked && node server.js md"

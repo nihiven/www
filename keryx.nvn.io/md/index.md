@@ -3,25 +3,25 @@
 This document tracks the implementation progress for Keryx, a TUI IRC client built with rust using ratatui.
 
 ## IRC Specs
-[Modern IRC Client Protocol](https://modern.ircdocs.horse/)
-[IRCv3 Specifications](https://ircv3.net/irc/)
+* [Modern IRC Client Protocol](https://modern.ircdocs.horse/)
+* [IRCv3 Specifications](https://ircv3.net/irc/)
 
 ## Architecture Overview
 
 **Pattern**: Elm Architecture (TEA)
-- **Model** ([src/app.rs](src/app.rs)) - All application state
-- **Update** ([src/update.rs](src/update.rs)) - State transitions based on Actions
-- **View** ([src/ui/render.rs](src/ui/render.rs)) - Pure rendering functions
+- **Model** ([https://github.com/nihiven/Keryx/blob/master/src/app.rs](https://github.com/nihiven/Keryx/blob/master/src/app.rs)) - All application state
+- **Update** ([https://github.com/nihiven/Keryx/blob/master/src/update.rs](https://github.com/nihiven/Keryx/blob/master/src/update.rs)) - State transitions based on Actions
+- **View** ([https://github.com/nihiven/Keryx/blob/master/src/ui/render.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/render.rs)) - Pure rendering functions
 
 **Async Structure**:
-- Main event loop in [src/main.rs](src/main.rs)
-- IRC client runs in separate async task ([src/irc/client.rs](src/irc/client.rs))
-- Input handler runs in separate async task ([src/events.rs](src/events.rs))
+- Main event loop in [https://github.com/nihiven/Keryx/blob/master/src/main.rs](https://github.com/nihiven/Keryx/blob/master/src/main.rs)
+- IRC client runs in separate async task ([https://github.com/nihiven/Keryx/blob/master/src/irc/client.rs](https://github.com/nihiven/Keryx/blob/master/src/irc/client.rs))
+- Input handler runs in separate async task ([https://github.com/nihiven/Keryx/blob/master/src/events.rs](https://github.com/nihiven/Keryx/blob/master/src/events.rs))
 - Communication via tokio mpsc channels using Actions
 
 ---
 
-## ✅ Completed
+## Completed
 
 - [x] Project structure created
 - [x] Dependencies added to Cargo.toml
@@ -29,11 +29,11 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ---
 
-## 📋 Implementation Checklist
+## Implementation Checklist
 
 ### Phase 1: Core Application State
 
-#### [src/app.rs](src/app.rs) - Application State
+#### [https://github.com/nihiven/Keryx/blob/master/src/app.rs](https://github.com/nihiven/Keryx/blob/master/src/app.rs) - Application State
 - [ ] Define `App` struct with all application state
   - [ ] Connection state (connected, server, nickname)
   - [ ] IRC data (channels HashMap, current_channel)
@@ -55,7 +55,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `switch_channel()`
   - [ ] `add_message()`
 
-#### [src/action.rs](src/action.rs) - Events/Actions
+#### [https://github.com/nihiven/Keryx/blob/master/src/action.rs](https://github.com/nihiven/Keryx/blob/master/src/action.rs) - Events/Actions
 - [ ] Define `Action` enum with all variants
   - [ ] IRC Events (IrcMessage, UserJoined, UserParted, etc.)
   - [ ] User Input (KeyPress, SendMessage, SendCommand)
@@ -66,7 +66,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ### Phase 2: Core Logic
 
-#### [src/update.rs](src/update.rs) - State Update Logic
+#### [https://github.com/nihiven/Keryx/blob/master/src/update.rs](https://github.com/nihiven/Keryx/blob/master/src/update.rs) - State Update Logic
 - [ ] Implement main `update(app, action)` function
 - [ ] Handle IRC events
   - [ ] IrcMessage - add to channel, increment unread
@@ -86,7 +86,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `handle_send_message()` - command parsing
   - [ ] `handle_command()` - IRC command execution (/join, /part, /quit, etc.)
 
-#### [src/config.rs](src/config.rs) - Configuration
+#### [https://github.com/nihiven/Keryx/blob/master/src/config.rs](https://github.com/nihiven/Keryx/blob/master/src/config.rs) - Configuration
 - [ ] Define `Config` struct
 - [ ] Define `ServerConfig` struct
 - [ ] Define `UserConfig` struct
@@ -100,7 +100,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ### Phase 3: Terminal & Events
 
-#### [src/tui.rs](src/tui.rs) - Terminal Setup
+#### [https://github.com/nihiven/Keryx/blob/master/src/tui.rs](https://github.com/nihiven/Keryx/blob/master/src/tui.rs) - Terminal Setup
 - [ ] Define `Tui` type alias
 - [ ] Implement `init()` function
   - [ ] Install panic hook
@@ -112,7 +112,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] Disable raw mode
 - [ ] Implement `install_panic_hook()` - cleanup on panic
 
-#### [src/events.rs](src/events.rs) - Event Handling
+#### [https://github.com/nihiven/Keryx/blob/master/src/events.rs](https://github.com/nihiven/Keryx/blob/master/src/events.rs) - Event Handling
 - [ ] Implement `handle_events()` async task
   - [ ] Poll for terminal events
   - [ ] Convert events to Actions
@@ -120,7 +120,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 - [ ] Implement `convert_event()` - map crossterm events to Actions
 - [ ] Alternative: Implement async event stream version
 
-#### [src/main.rs](src/main.rs) - Main Entry Point
+#### [https://github.com/nihiven/Keryx/blob/master/src/main.rs](https://github.com/nihiven/Keryx/blob/master/src/main.rs) - Main Entry Point
 - [ ] Uncomment module declarations
 - [ ] Implement `main()` function with tokio async runtime
   - [ ] Initialize error handling (color-eyre)
@@ -139,7 +139,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ### Phase 4: IRC Integration
 
-#### [src/irc/message.rs](src/irc/message.rs) - Message Types
+#### [https://github.com/nihiven/Keryx/blob/master/src/irc/message.rs](https://github.com/nihiven/Keryx/blob/master/src/irc/message.rs) - Message Types
 - [ ] Define `ParsedMessage` struct
 - [ ] Define `MessageKind` enum (if not in app.rs)
 - [ ] Implement `ParsedMessage::from_irc_message()`
@@ -151,7 +151,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `format_action()` - format /me action
   - [ ] `format_system()` - format system messages
 
-#### [src/irc/connection.rs](src/irc/connection.rs) - Connection Management
+#### [https://github.com/nihiven/Keryx/blob/master/src/irc/connection.rs](https://github.com/nihiven/Keryx/blob/master/src/irc/connection.rs) - Connection Management
 - [ ] Define `ConnectionManager` struct
 - [ ] Define `ConnectionState` enum
 - [ ] Implement `ConnectionManager::new()`
@@ -163,7 +163,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 - [ ] Implement `reset()` - reset connection state
 - [ ] Implement `parse_server_address()` - parse host:port
 
-#### [src/irc/client.rs](src/irc/client.rs) - IRC Client
+#### [https://github.com/nihiven/Keryx/blob/master/src/irc/client.rs](https://github.com/nihiven/Keryx/blob/master/src/irc/client.rs) - IRC Client
 - [ ] Define `IrcClient` struct
 - [ ] Define `IrcCommand` enum
   - [ ] Connect, Disconnect, JoinChannel, PartChannel, SendMessage, ChangeNickname, Quit
@@ -181,25 +181,25 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] JoinChannel, PartChannel, SendMessage, etc.
 - [ ] Implement `spawn()` - convenience function to spawn client task
 
-#### [src/irc/mod.rs](src/irc/mod.rs)
+#### [https://github.com/nihiven/Keryx/blob/master/src/irc/mod.rs](https://github.com/nihiven/Keryx/blob/master/src/irc/mod.rs)
 - [ ] Uncomment and export all submodules
 
 ### Phase 5: UI Rendering
 
-#### [src/ui/layout.rs](src/ui/layout.rs) - Layout Calculations
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/layout.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/layout.rs) - Layout Calculations
 - [ ] Define `LayoutChunks` struct
 - [ ] Implement `calculate_main_layout()` - main 3-column layout
 - [ ] Implement `calculate_compact_layout()` - for small terminals
 - [ ] Implement `calculate_maximized_layout()` - maximize message area
 - [ ] Implement `calculate_responsive_layout()` - auto-select based on size
 
-#### [src/ui/render.rs](src/ui/render.rs) - Main Render
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/render.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/render.rs) - Main Render
 - [ ] Implement `render()` function
   - [ ] Calculate layout
   - [ ] Render each component
 - [ ] Alternative: Implement `render_inline()` with direct layout
 
-#### [src/ui/components/channel_list.rs](src/ui/components/channel_list.rs) - Channel List
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/components/channel_list.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/components/channel_list.rs) - Channel List
 - [ ] Implement `render()` function
   - [ ] Create ListItems from channels
   - [ ] Highlight current channel
@@ -210,7 +210,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `format_channel_name()` - add indicators
   - [ ] `get_channel_style()` - style based on state
 
-#### [src/ui/components/message_view.rs](src/ui/components/message_view.rs) - Message View
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/components/message_view.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/components/message_view.rs) - Message View
 - [ ] Implement `render()` function
   - [ ] Get current channel messages
   - [ ] Format messages as Lines
@@ -228,7 +228,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `highlight_urls()` - highlight URLs
   - [ ] `calculate_visible_messages()` - fit to area
 
-#### [src/ui/components/input.rs](src/ui/components/input.rs) - Input Box
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/components/input.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/components/input.rs) - Input Box
 - [ ] Implement `render()` - simple version
   - [ ] Format input with cursor
   - [ ] Style based on command vs message
@@ -245,7 +245,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `next()` - go forward (down arrow)
 - [ ] Implement `parse_command()` - parse IRC commands
 
-#### [src/ui/components/user_list.rs](src/ui/components/user_list.rs) - User List
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/components/user_list.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/components/user_list.rs) - User List
 - [ ] Define `UserMode` enum
   - [ ] Owner, Admin, Op, HalfOp, Voice, Normal
   - [ ] Implement `prefix()` - get prefix character
@@ -260,7 +260,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `strip_mode_prefix()` - remove prefix
   - [ ] `sort_users()` - sort by mode then alphabetically
 
-#### [src/ui/components/status_bar.rs](src/ui/components/status_bar.rs) - Status Bar
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/components/status_bar.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/components/status_bar.rs) - Status Bar
 - [ ] Implement `render()` function
   - [ ] Show connection status (connected/disconnected)
   - [ ] Show server name
@@ -276,10 +276,10 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
   - [ ] `get_connection_color()` - green vs red
   - [ ] `format_duration()` - format uptime
 
-#### [src/ui/components/mod.rs](src/ui/components/mod.rs)
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/components/mod.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/components/mod.rs)
 - [ ] Uncomment and export all component modules
 
-#### [src/ui/mod.rs](src/ui/mod.rs)
+#### [https://github.com/nihiven/Keryx/blob/master/src/ui/mod.rs](https://github.com/nihiven/Keryx/blob/master/src/ui/mod.rs)
 - [ ] Uncomment and export all UI modules
 
 ---
@@ -325,7 +325,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ---
 
-## 🎯 Quick Start Implementation Order
+## Quick Start Implementation Order
 
 **Recommended order for fastest working prototype:**
 
@@ -340,7 +340,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ---
 
-## 📚 Key Dependencies Documentation
+## Key Dependencies Documentation
 
 - [ratatui](https://docs.rs/ratatui/) - TUI framework
 - [crossterm](https://docs.rs/crossterm/) - Terminal manipulation
@@ -351,7 +351,7 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ---
 
-## 💡 Tips
+## Tips
 
 - Start with the `examples/tui_hello.rs` file to see a working ratatui example
 - Test each component independently before integrating
@@ -362,9 +362,8 @@ This document tracks the implementation progress for Keryx, a TUI IRC client bui
 
 ---
 
-## 📝 Notes
+## Notes
 
-- All files contain detailed TODO comments with implementation guidance
 - The architecture follows the Elm Architecture (TEA) pattern for predictability
 - Each component is isolated and can be developed/tested independently
 - The IRC client runs asynchronously, separate from the UI loop
