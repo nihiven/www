@@ -121,7 +121,6 @@ ${html}
 <body>
   <h1>404 - File Not Found</h1>
   <p>The requested markdown file could not be found.</p>
-  <p>Just so you know: ${mdDirectory}</p>
 </body>
 </html>`);
     } else {

@@ -45,7 +45,7 @@ const server = http.createServer(async (req, res) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle}</title>
+  <title>🐶 ${pageTitle}</title>
   <style>
     body {
       max-width: 800px;

@@ -68,3 +68,16 @@ services:
     volumes:
       - /share/MediaOne/www/glitchrock:/app
     command: sh -c "npm install marked && node server.js md"
+
+  samus-cam:
+    image: node:latest
+    container_name: samus-cam
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32795
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/samus.cam:/app
+    command: sh -c "npm install marked && node server.js md"
