@@ -39,7 +39,7 @@ const server = http.createServer(async (req, res) => {
     const html = marked.parse(content);
 
     // Send response with nice styling
-    res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(`<!DOCTYPE html>
 <html>
 <head>
@@ -112,21 +112,19 @@ const server = http.createServer(async (req, res) => {
 ${html}
 </body>
 </html>`);
-
   } catch (err) {
     if (err.code === 'ENOENT') {
-      res.writeHead(404, {'Content-Type': 'text/html'});
+      res.writeHead(404, { 'Content-Type': 'text/html' });
       res.end(`<!DOCTYPE html>
 <html>
 <head><title>404 Not Found</title></head>
 <body>
   <h1>404 - File Not Found</h1>
   <p>The requested markdown file could not be found.</p>
-  <p>Just so you know: ${mdDirectory}</p>
 </body>
 </html>`);
     } else {
-      res.writeHead(500, {'Content-Type': 'text/html'});
+      res.writeHead(500, { 'Content-Type': 'text/html' });
       res.end(`<!DOCTYPE html>
 <html>
 <head><title>500 Error</title></head>

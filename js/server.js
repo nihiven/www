@@ -33,7 +33,7 @@ const server = http.createServer(async (req, res) => {
 
     // Extract title from first H1
     const titleMatch = content.match(/^#\s+(.+)$/m);
-    const pageTitle = titleMatch ? titleMatch[1] : 'Documentation';
+    const pageTitle = titleMatch ? titleMatch[1] : 'A cool web site!';
 
     // Convert to HTML
     const html = marked.parse(content);
@@ -121,6 +121,7 @@ ${html}
 <body>
   <h1>404 - File Not Found</h1>
   <p>The requested markdown file could not be found.</p>
+  <p>Just so you know: ${mdDirectory}</p>
 </body>
 </html>`);
     } else {

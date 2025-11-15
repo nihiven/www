@@ -45,7 +45,7 @@ const server = http.createServer(async (req, res) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>nihiven.dev >>> ${pageTitle}</title>
+  <title>nihiven:: ${pageTitle}</title>
   <style>
     body {
       max-width: 800px;
@@ -120,8 +120,7 @@ ${html}
 <head><title>404 Not Found</title></head>
 <body>
   <h1>404 - File Not Found</h1>
-  <p>The requested markdown file could not be found.</p>
-  <p>Just so you know: ${mdDirectory}</p>
+  <p>The requested markdown file could not be found. 🪦</p>
 </body>
 </html>`);
     } else {
