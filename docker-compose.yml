@@ -29,10 +29,10 @@ services:
       - /share/MediaOne/www/nvn.io:/app
     command: sh -c "npm install marked && node server.js md"
 
-  # JustinBehanna.com
+  # JustinBehanna.com/net/org
   justinbehanna:
     image: node:latest
-    container_name: justinbehanna-com
+    container_name: justinbehanna-xxx
     network_mode: 'host'
     restart: unless-stopped
     environment:
@@ -40,10 +40,10 @@ services:
       - PORT=32792
     working_dir: /app
     volumes:
-      - /share/MediaOne/www/justinbehanna.com:/app
+      - /share/MediaOne/www/justinbehanna.xxx:/app
     command: sh -c "npm install marked && node server.js md"
 
-  nihiven-xxx:
+  nihiven:
     image: node:latest
     container_name: nihiven-xxx
     network_mode: 'host'
@@ -54,4 +54,17 @@ services:
     working_dir: /app
     volumes:
       - /share/MediaOne/www/nihiven.xxx:/app
+    command: sh -c "npm install marked && node server.js md"
+
+  glitchrock:
+    image: node:latest
+    container_name: glitchrock-xxx
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32794
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/glitchrock:/app
     command: sh -c "npm install marked && node server.js md"
