@@ -8,7 +8,7 @@ const webringSites = JSON.parse(
 
 /**
  * Generate web ring HTML for a given site
- * @param {string} currentSite - The current site name (e.g., 'samus.cam')
+ * @param {string} currentSite - samus.cam
  * @returns {string} HTML string for the web ring
  */
 function getWebRingHTML(currentSite) {
@@ -36,7 +36,7 @@ function getWebRingHTML(currentSite) {
     (currentIndex - 1 + webringSites.length) % webringSites.length;
   const nextIndex = (currentIndex + 1) % webringSites.length;
 
-  // Get random site (excluding current)
+  // Get random site that isn't the current site
   const otherSites = webringSites.filter((_, i) => i !== currentIndex);
   const randomSite = otherSites[Math.floor(Math.random() * otherSites.length)];
 
