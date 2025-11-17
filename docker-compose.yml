@@ -13,8 +13,8 @@ services:
     working_dir: /app
     volumes:
       - /share/MediaOne/www/keryx.nvn.io:/app
-      - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install && node js/server.js"
+      - /share/MediaOne/www/assets:/app/assets:ro
+    command: sh -c "npm install && node assets/js/server.js"
 
   # JustinBehanna.com/net/org
   justinbehanna:
@@ -28,8 +28,8 @@ services:
     working_dir: /app
     volumes:
       - /share/MediaOne/www/justinbehanna.xxx:/app
-      - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install && node js/server.js"
+      - /share/MediaOne/www/assets:/app/assets:ro
+    command: sh -c "npm install && node assets/js/server.js"
 
   nihiven:
     image: node:latest
@@ -42,8 +42,8 @@ services:
     working_dir: /app
     volumes:
       - /share/MediaOne/www/nihiven.xxx:/app
-      - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install && node js/server.js"
+      - /share/MediaOne/www/assets:/app/assets:ro
+    command: sh -c "npm install && node assets/js/server.js"
 
   glitchrock:
     image: node:latest
@@ -56,8 +56,8 @@ services:
     working_dir: /app
     volumes:
       - /share/MediaOne/www/glitchrock:/app
-      - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install && node js/server.js"
+      - /share/MediaOne/www/assets:/app/assets:ro
+    command: sh -c "npm install && node assets/js/server.js"
 
   samus-cam:
     image: node:latest
@@ -70,5 +70,5 @@ services:
     working_dir: /app
     volumes:
       - /share/MediaOne/www/samus.cam:/app
-      - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install && node js/server.js"
+      - /share/MediaOne/www/assets:/app/assets:ro
+    command: sh -c "npm install && node assets/js/server.js"

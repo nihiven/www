@@ -25,7 +25,7 @@ console.log(
 );
 
 // Load EJS template
-const templatePath = path.join(__dirname, 'templates', 'layout.ejs');
+const templatePath = path.join(__dirname, '../ejs', 'layout.ejs');
 
 const server = http.createServer(async (req, res) => {
   try {
