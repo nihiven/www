@@ -1,0 +1,40 @@
+<%
+const fs = require('fs');
+const path = require('path');
+
+// Load web ring sites from JSON
+const webringSites = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '../../webring.json'), 'utf8')
+);
+
+const currentIndex = webringSites.findIndex(site => site.name === siteName);
+
+if (currentIndex === -1) {
+  // Site not found in ring, show all sites
+  %>
+  <div style="border-top: 2px solid #ddd; margin-top: 40px; padding-top: 20px; text-align: center; font-size: 14px; color: #666;">
+    <div>
+      <% webringSites.forEach((site, i) => { %>
+        <% if (i > 0) { %> | <% } %>
+        <a href="<%= site.url %>" style="margin: 0 10px;"><%= site.name %></a>
+      <% }); %>
+    </div>
+  </div>
+  <%
+} else {
+  // Calculate previous, next, and random sites
+  const prevIndex = (currentIndex - 1 + webringSites.length) % webringSites.length;
+  const nextIndex = (currentIndex + 1) % webringSites.length;
+  const otherSites = webringSites.filter((_, i) => i !== currentIndex);
+  const randomSite = otherSites[Math.floor(Math.random() * otherSites.length)];
+  %>
+  <div style="border-top: 2px solid #ddd; margin-top: 40px; padding-top: 20px; text-align: center; font-size: 14px; color: #666;">
+    <div>
+      <a href="<%= webringSites[prevIndex].url %>" style="margin: 0 10px;">← <%= webringSites[prevIndex].name %></a>
+      :: <a href="<%= randomSite.url %>" style="margin: 0 10px;">random</a> ::
+      <a href="<%= webringSites[nextIndex].url %>" style="margin: 0 10px;"><%= webringSites[nextIndex].name %> →</a>
+    </div>
+  </div>
+  <%
+}
+%>
