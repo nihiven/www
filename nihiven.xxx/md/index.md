@@ -1,5 +1,5 @@
-# Welcome
+# nihiven's Cool Page
 
-Follow the white rabbit.
+[<font size="8">🐇</font>](/links.md)
 
-[🐇](/links.md)
+[<font size="8">🎵</font>](/music.md)

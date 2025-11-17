@@ -1,21 +1,29 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { marked } = require('marked');
+const { getWebRingHTML } = require(path.join(__dirname, 'webring.js'));
 
-// Get markdown directory from command line argument or use default
-const mdDirectory = process.argv[2] || path.join(process.cwd(), 'md');
+let siteConfig;
+try {
+  const configPath = path.join(process.cwd(), 'site-config.json');
+  siteConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+} catch (err) {
+  console.error('ERROR: No site-config.json found. Cannot start server.');
+  console.error(
+    'Please create site-config.json with: { "name": "Site Name", "title": "Page Title", "address": "site.com" }'
+  );
+  process.exit(1);
+}
 
-console.log(`Serving markdown files from: ${mdDirectory}`);
+// Get markdown directory from site config or use default 'md'
+const mdDirectory = siteConfig.mdDirectory || path.join(process.cwd(), 'md');
 
-// Import marked dynamically since we'll install it
-let marked;
+console.log(
+  `Serving \"${siteConfig.name}\" markdown files from: ${mdDirectory}`
+);
 
 const server = http.createServer(async (req, res) => {
-  // Lazy load marked
-  if (!marked) {
-    marked = (await import('marked')).marked;
-  }
-
   try {
     // Clean up the URL path
     let filePath = req.url === '/' ? '/index.md' : req.url;
@@ -31,10 +39,6 @@ const server = http.createServer(async (req, res) => {
     // Read the markdown file
     const content = fs.readFileSync(filePath, 'utf8');
 
-    // Extract title from first H1
-    const titleMatch = content.match(/^#\s+(.+)$/m);
-    const pageTitle = titleMatch ? titleMatch[1] : 'A cool web site!';
-
     // Convert to HTML
     const html = marked.parse(content);
 
@@ -45,7 +49,7 @@ const server = http.createServer(async (req, res) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle}</title>
+  <title>${siteConfig.title}</title>
   <style>
     body {
       max-width: 800px;
@@ -110,6 +114,7 @@ const server = http.createServer(async (req, res) => {
 </head>
 <body>
 ${html}
+${getWebRingHTML(siteConfig.name)}
 </body>
 </html>`);
   } catch (err) {

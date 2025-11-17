@@ -12,3 +12,4 @@
 | nihiven.dev         | `nihiven`       | 32793     | http://192.168.0.82:32793 |
 | glitchrock.games    | `glitchrock`    | 32794     | http://192.168.0.82:32794 |
 | glitchrockgames.com | `glitchrock`    | 32794     | http://192.168.0.82:32794 |
+| samus.cam           | `samus-cam`     | 32795     | http://192.168.0.82:32795 |
