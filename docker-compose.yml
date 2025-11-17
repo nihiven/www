@@ -14,7 +14,7 @@ services:
     volumes:
       - /share/MediaOne/www/keryx.nvn.io:/app
       - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install marked && node server.js md"
+    command: sh -c "npm install marked && node js/server.js"
 
   # nvn.io
   nvn-io:
@@ -29,7 +29,7 @@ services:
     volumes:
       - /share/MediaOne/www/nvn.io:/app
       - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install marked && node server.js md"
+    command: sh -c "npm install marked && node js/server.js"
 
   # JustinBehanna.com/net/org
   justinbehanna:
@@ -44,7 +44,7 @@ services:
     volumes:
       - /share/MediaOne/www/justinbehanna.xxx:/app
       - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install marked && node server.js md"
+    command: sh -c "npm install marked && node js/server.js"
 
   nihiven:
     image: node:latest
@@ -58,7 +58,7 @@ services:
     volumes:
       - /share/MediaOne/www/nihiven.xxx:/app
       - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install marked && node server.js md"
+    command: sh -c "npm install marked && node js/server.js"
 
   glitchrock:
     image: node:latest
@@ -72,7 +72,7 @@ services:
     volumes:
       - /share/MediaOne/www/glitchrock:/app
       - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install marked && node server.js md"
+    command: sh -c "npm install marked && node js/server.js"
 
   samus-cam:
     image: node:latest
