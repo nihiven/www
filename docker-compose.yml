@@ -16,21 +16,6 @@ services:
       - /share/MediaOne/www/js:/app/js:ro
     command: sh -c "npm install && node js/server.js"
 
-  # nvn.io
-  nvn-io:
-    image: node:latest
-    container_name: nvn-io
-    network_mode: 'host'
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=production
-      - PORT=32791
-    working_dir: /app
-    volumes:
-      - /share/MediaOne/www/nvn.io:/app
-      - /share/MediaOne/www/js:/app/js:ro
-    command: sh -c "npm install && node js/server.js"
-
   # JustinBehanna.com/net/org
   justinbehanna:
     image: node:latest
