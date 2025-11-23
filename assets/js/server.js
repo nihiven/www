@@ -24,8 +24,23 @@ console.log(
   `Serving \"${siteConfig.name}\" markdown files from: ${mdDirectory}`
 );
 
-// Load EJS template
-const templatePath = path.join(__dirname, '../ejs', 'layout.ejs');
+// Check site directory first, fall back to global /assets/
+function localPath(relativePath) {
+  const siteDir = process.cwd();
+  const localFilePath = path.join(siteDir, relativePath);
+  const globalFilePath = path.join(__dirname, '..', relativePath);
+
+  // Check if file exists in site-specific directory
+  if (fs.existsSync(localFilePath)) {
+    return localFilePath;
+  }
+
+  // Fall back to global assets
+  return globalFilePath;
+}
+
+// Load EJS template (check local first, then global)
+const templatePath = localPath('ejs/layout.ejs');
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -55,7 +70,8 @@ const server = http.createServer(async (req, res) => {
       {
         siteConfig,
         content: html,
-        webRingHTML: webRingHTML
+        webRingHTML: webRingHTML,
+        localPath: localPath, // Pass helper to templates for local-first includes
       },
       (err, str) => {
         if (err) {
@@ -66,26 +82,48 @@ const server = http.createServer(async (req, res) => {
       }
     );
   } catch (err) {
+    // Generate webring HTML for error pages
+    const webRingHTML = getWebRingHTML(siteConfig.name);
+
     if (err.code === 'ENOENT') {
-      res.writeHead(404, { 'Content-Type': 'text/html' });
-      res.end(`<!DOCTYPE html>
-<html>
-<head><title>404 Not Found</title></head>
-<body>
-  <h1>404 - File Not Found</h1>
-  <p>The requested markdown file could not be found.</p>
-</body>
-</html>`);
+      ejs.renderFile(
+        localPath('ejs/404.ejs'),
+        {
+          siteConfig,
+          webRingHTML: webRingHTML,
+          localPath: localPath,
+        },
+        (ejsErr, str) => {
+          if (ejsErr) {
+            console.error('Error rendering 404 template:', ejsErr);
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('404 - File Not Found');
+          } else {
+            res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.end(str);
+          }
+        }
+      );
     } else {
-      res.writeHead(500, { 'Content-Type': 'text/html' });
-      res.end(`<!DOCTYPE html>
-<html>
-<head><title>500 Error</title></head>
-<body>
-  <h1>500 - Server Error</h1>
-  <p>${err.message}</p>
-</body>
-</html>`);
+      ejs.renderFile(
+        localPath('ejs/500.ejs'),
+        {
+          siteConfig,
+          webRingHTML: webRingHTML,
+          localPath: localPath,
+          errorMessage: err.message,
+        },
+        (ejsErr, str) => {
+          if (ejsErr) {
+            console.error('Error rendering 500 template:', ejsErr);
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.end('500 - Server Error');
+          } else {
+            res.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.end(str);
+          }
+        }
+      );
     }
   }
 });

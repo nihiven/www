@@ -3,11 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= siteConfig.title %></title>
+  <title>404 Not Found - <%= siteConfig.title %></title>
   <%- include(localPath('ejs/partials/styles.ejs')) %>
 </head>
 <body>
-  <%- content %>
+  <h1>404 - File Not Found</h1>
+  <p>The requested markdown file could not be found.</p>
+  <p><a href="/">Return to home</a></p>
   <%- webRingHTML %>
 </body>
 </html>

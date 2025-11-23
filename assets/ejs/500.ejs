@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>500 Server Error - <%= siteConfig.title %></title>
+  <%- include(localPath('ejs/partials/styles.ejs')) %>
+</head>
+<body>
+  <h1>500 - Server Error</h1>
+  <p>An error occurred while processing your request.</p>
+  <% if (errorMessage) { %>
+    <p><strong>Error:</strong> <%= errorMessage %></p>
+  <% } %>
+  <p><a href="/">Return to home</a></p>
+  <%- webRingHTML %>
+</body>
+</html>
