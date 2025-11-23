@@ -1,3 +1,3 @@
-# jb.com
+# It's JB
 
 hi!
