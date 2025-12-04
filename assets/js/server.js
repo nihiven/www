@@ -44,6 +44,31 @@ const templatePath = localPath('ejs/layout.ejs');
 
 const server = http.createServer(async (req, res) => {
   try {
+    // Serve static assets (check local first, then global)
+    if (req.url.startsWith('/assets/')) {
+      const assetPath = localPath(req.url.substring(1)); // Remove leading slash
+      if (fs.existsSync(assetPath)) {
+        const ext = path.extname(assetPath);
+        const mimeTypes = {
+          '.png': 'image/png',
+          '.jpg': 'image/jpeg',
+          '.jpeg': 'image/jpeg',
+          '.gif': 'image/gif',
+          '.svg': 'image/svg+xml',
+          '.css': 'text/css',
+          '.js': 'application/javascript',
+        };
+        const contentType = mimeTypes[ext] || 'application/octet-stream';
+        res.writeHead(200, { 'Content-Type': contentType });
+        fs.createReadStream(assetPath).pipe(res);
+        return;
+      } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 - Asset Not Found');
+        return;
+      }
+    }
+
     // Clean up the URL path
     let filePath = req.url === '/' ? '/index.md' : req.url;
 

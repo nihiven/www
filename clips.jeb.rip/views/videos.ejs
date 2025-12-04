@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Clips</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    nav a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #666;
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .video-card {
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .video-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      background: #000;
+    }
+
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .video-info {
+      padding: 1rem;
+    }
+
+    .video-name {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      word-break: break-all;
+      color: #e0e0e0;
+    }
+
+    .video-meta {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+
+    .video-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #60a5fa;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #3b82f6;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .btn-secondary {
+      background: #333;
+      color: #e0e0e0;
+    }
+
+    .btn-secondary:hover {
+      background: #444;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: #111;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .copy-url-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .copy-url-input {
+      flex: 1;
+      padding: 0.5rem;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-size: 0.85rem;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>All Clips</h1>
+    <nav>
+      <a href="/">&larr; Upload new video</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <% if (videos.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📹</div>
+        <div>No clips yet. <a href="/">Upload your first video</a></div>
+      </div>
+    <% } else { %>
+      <div class="video-grid">
+        <% videos.forEach(video => { %>
+          <div class="video-card">
+            <div class="video-wrapper">
+              <video controls preload="metadata">
+                <source src="<%= video.url %>" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="video-info">
+              <div class="video-name"><%= video.name %></div>
+              <div class="video-meta">
+                <%= video.size %> MB • <%= new Date(video.date).toLocaleDateString() %>
+              </div>
+              <div class="video-actions">
+                <button class="btn btn-primary" onclick="copyShareLink('<%= video.name %>')">Share</button>
+                <button class="btn btn-secondary" onclick="copyUrl('<%= video.url %>')">Copy URL</button>
+                <a href="<%= video.url %>" download class="btn btn-secondary">Download</a>
+                <button class="btn btn-danger" onclick="confirmDelete('<%= video.name %>')">Delete</button>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <div class="modal-title">Delete Video</div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong id="deleteFileName"></strong>?
+        This action cannot be undone.
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="deleteVideo()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let deleteTarget = null;
+
+    function copyShareLink(filename) {
+      const baseFilename = filename.replace('.mp4', '');
+      const shareUrl = `${window.location.origin}/v/${baseFilename}`;
+      navigator.clipboard.writeText(shareUrl).catch(() => {
+        // Silent fail - clipboard API not available
+        console.error('Clipboard API not available');
+      });
+    }
+
+    function copyUrl(url) {
+      const fullUrl = window.location.origin + url;
+      navigator.clipboard.writeText(fullUrl).catch(() => {
+        // Silent fail - clipboard API not available
+        console.error('Clipboard API not available');
+      });
+    }
+
+    function confirmDelete(filename) {
+      deleteTarget = filename;
+      document.getElementById('deleteFileName').textContent = filename;
+      document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      deleteTarget = null;
+      document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    async function deleteVideo() {
+      if (!deleteTarget) return;
+
+      try {
+        const response = await fetch(`/videos/${deleteTarget}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          location.reload();
+        } else {
+          alert('Failed to delete video');
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+
+      closeDeleteModal();
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDeleteModal();
+      }
+    });
+
+    // Close modal on background click
+    document.getElementById('deleteModal').addEventListener('click', (e) => {
+      if (e.target.id === 'deleteModal') {
+        closeDeleteModal();
+      }
+    });
+  </script>
+</body>
+</html>

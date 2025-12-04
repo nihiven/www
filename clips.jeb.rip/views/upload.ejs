@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Video - Clips</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2rem;
+    }
+
+    nav {
+      margin-top: 1rem;
+    }
+
+    nav a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .drop-zone {
+      border: 3px dashed #333;
+      border-radius: 12px;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: #111;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: #60a5fa;
+      background: #1a1a1a;
+    }
+
+    .drop-zone-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .drop-zone-text {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .drop-zone-subtext {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .file-info {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #1a1a1a;
+      border-radius: 8px;
+    }
+
+    .file-info.active {
+      display: block;
+    }
+
+    .file-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-btn {
+      margin-top: 1rem;
+      padding: 0.75rem 2rem;
+      background: #60a5fa;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .upload-btn:hover {
+      background: #3b82f6;
+    }
+
+    .upload-btn:disabled {
+      background: #333;
+      cursor: not-allowed;
+    }
+
+    .progress-container {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .progress-container.active {
+      display: block;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #222;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #60a5fa;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #064e3b;
+      border: 1px solid #10b981;
+      border-radius: 8px;
+      color: #10b981;
+    }
+
+    .success-message.active {
+      display: block;
+    }
+
+    .success-message a {
+      color: #34d399;
+      text-decoration: underline;
+    }
+
+    .error-message {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #7f1d1d;
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      color: #ef4444;
+    }
+
+    .error-message.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Upload Video</h1>
+    <nav>
+      <a href="/videos">View all clips &rarr;</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-zone-icon">📹</div>
+      <div class="drop-zone-text">Drop video here or click to select</div>
+      <div class="drop-zone-subtext">MP4, MOV, AVI, WebM, MKV supported</div>
+    </div>
+
+    <input type="file" id="fileInput" accept="video/*">
+
+    <div class="file-info" id="fileInfo">
+      <div class="file-name" id="fileName"></div>
+      <button class="upload-btn" id="uploadBtn">Transcode & Upload</button>
+    </div>
+
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">Uploading and transcoding...</div>
+    </div>
+
+    <div class="success-message" id="successMessage">
+      <strong>Success!</strong> Video transcoded and ready.
+      <div style="margin-top: 0.5rem;">
+        <a href="/videos">View all clips</a>
+      </div>
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let selectedFile = null;
+
+    // Click to select file
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // File selected via input
+    fileInput.addEventListener('change', (e) => {
+      handleFile(e.target.files[0]);
+    });
+
+    // Drag and drop
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file) return;
+
+      if (!file.type.startsWith('video/')) {
+        showError('Please select a video file');
+        return;
+      }
+
+      selectedFile = file;
+      fileName.textContent = `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+      fileInfo.classList.add('active');
+      successMessage.classList.remove('active');
+      errorMessage.classList.remove('active');
+    }
+
+    uploadBtn.addEventListener('click', async () => {
+      if (!selectedFile) return;
+
+      const formData = new FormData();
+      formData.append('video', selectedFile);
+
+      uploadBtn.disabled = true;
+      progressContainer.classList.add('active');
+      progressFill.style.width = '0%';
+
+      try {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            const percentComplete = (e.loaded / e.total) * 50; // Upload is 50% of progress
+            progressFill.style.width = percentComplete + '%';
+            progressText.textContent = `Uploading... ${Math.round(percentComplete)}%`;
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            progressFill.style.width = '100%';
+            progressText.textContent = 'Complete!';
+            setTimeout(() => {
+              successMessage.classList.add('active');
+              progressContainer.classList.remove('active');
+              fileInfo.classList.remove('active');
+              dropZone.style.display = 'flex';
+              uploadBtn.disabled = false;
+              selectedFile = null;
+              fileInput.value = '';
+            }, 500);
+          } else {
+            const error = JSON.parse(xhr.responseText);
+            showError(error.error || 'Upload failed');
+          }
+        });
+
+        xhr.addEventListener('error', () => {
+          showError('Network error occurred');
+        });
+
+        xhr.addEventListener('loadstart', () => {
+          progressText.textContent = 'Uploading and transcoding...';
+          progressFill.style.width = '50%';
+        });
+
+        xhr.open('POST', '/upload');
+        xhr.send(formData);
+
+      } catch (error) {
+        showError(error.message);
+      }
+    });
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('active');
+      progressContainer.classList.remove('active');
+      uploadBtn.disabled = false;
+    }
+  </script>
+</body>
+</html>

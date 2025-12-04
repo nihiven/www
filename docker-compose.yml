@@ -72,3 +72,19 @@ services:
       - /share/MediaOne/www/samus.cam:/app
       - /share/MediaOne/www/assets:/app/assets:ro
     command: sh -c "npm install && node assets/js/server.js"
+
+  clips:
+    image: node:20-slim
+    container_name: clips-jeb-rip
+    network_mode: 'host'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=32796
+      - LIBVA_DRIVER_NAME=iHD
+    working_dir: /app
+    volumes:
+      - /share/MediaOne/www/clips.jeb.rip:/app
+    devices:
+      - /dev/dri:/dev/dri
+    command: sh -c "apt-get update && apt-get install -y ffmpeg vainfo intel-media-va-driver && npm install && mkdir -p uploads transcoded thumbnails && chmod 777 uploads transcoded thumbnails && node server.js"
