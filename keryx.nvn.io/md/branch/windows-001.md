@@ -8,11 +8,11 @@ I'm going to write tests as I write functionality, mostly to get some experience
 
 ## Questions
 - [ ] How do we show multiple windows with limited space?
+- [ ] How does tiling work?
 - [ ] What is each window's layout?
 - [ ] Do we adjust layouts based on window size?
 - [ ] How do we navigate between windows?
-  - [ ] Alt+# to start
-- [ ] How does tiling work?
+- [ ] Alt + # to start
 - [X] What data do we need to store for each window?
 - [X] Where do we show the query window list?
 
@@ -23,6 +23,7 @@ I'm going to write tests as I write functionality, mostly to get some experience
     - [ ] Customizable
 - [ ] Message targeting
 - [ ] Tiling
+- [ ] Use inverse or color (optional)
 
 ## Types of Windows
 - [ ] Status - same as mIRC Status window
@@ -31,12 +32,9 @@ I'm going to write tests as I write functionality, mostly to get some experience
 - [ ] Keryx Settings - let user change app settings
 
 ### #Channel Window
-```                                                                        
+```
+  Version 2 (move bars to bottom, above editbox, remove bar borders, use color/inverse)
   ┌────────────────────────────── irc.keryx.rs ──────────────────────────────┐
-  │ <<< 12 |  +#irc [ @#keryx ] @#miami.vice : #mIRC : #+scripting   |   >>> │
-  │──────────────────────────────────────────────────────────────────────────│
-  │ nihiven : Marla : !TylerDurden                                           │
-  │──────────────────────────────────────────────────────────────────────────│
   │ v1.0 available! | github.com/nihiven/keryx/                  │ @Marla    │
   │──────────────────────────────────────────────────────────────│ @nihiven  │
   │                                                              │ @Samus    │
@@ -48,29 +46,29 @@ I'm going to write tests as I write functionality, mostly to get some experience
   │                                                              │  Richards │
   │                                                              │           │
   │                                                              │           │
-  │                                                              │           │
   │ <Matrix> anyone know how to get blood out of cotton?         │           │
   │ <@nihiven> i'm trying a new soap.                            │           │
   │            its seems good so far, might work                 │           │
+  | [JOIN] Dutch <arnold@whatthehell.ru>
   │──────────────────────────────────────────────────────────────┴───────────│
+  │ <<< 12    +#irc [ @#keryx ] @#miami.vice : #mIRC : #+scripting       >>> │
+  │ nihiven : Marla : !TylerDurden                                           │
+  │──────────────────────────────────────────────────────────────────────────│ 
   │ /commands and cool things                                                │
   └──────────────────────────────────────────────────────────────────────────┘
 ```                                                                                        
 - Channel tab bar shows active channel as [ #channel ] and shows your mode on the channel. The arrows at the end show how many channels are to the left/right. It shows one arrow for each channel, up to three arrows. When it hits four+ channels, it shows three arrows and a number that indicates the total.
 - Query tab bar shows underneath the channel tab bar when both are open.
 - Nicklist is responsive. Wide when window is wide, as small as possible when window is medium, and hidden when the window is small. User can open it with some command or hotkey.
-- The channel topic is shown in the main window, directly under the channel tab bar. The topic bar shares horizontal space with the nicklist because I think it makes it clear that the topic belongs to the channel.
+- The channel topic is shown at the top of the channel window. The topic bar shares horizontal space with the nicklist because I think it makes it clear that the topic belongs to the channel.
 - Channel messages and events are shown in the main window. Consecutive user messages only show the user's nick on the first message.
 
 
 ### Status Window
-```                                                                        
+```
+  Version 2 (move bars to bottom, remove borders, use inverse/color)                                                                        
   ┌────────────────────────────── irc.keryx.rs ──────────────────────────────┐
   │ keryx.Status                                                 nihiven +iw |
-  │──────────────────────────────────────────────────────────────────────────│
-  │ <<<       +#irc : @#keryx : @#miami.vice : #mIRC : #+scripting        >> │
-  │──────────────────────────────────────────────────────────────────────────│
-  │ nihiven : Marla : !TylerDurden                                           │
   │──────────────────────────────────────────────────────────────────────────│
   │                                                                          │
   │                                                                          │
@@ -85,6 +83,9 @@ I'm going to write tests as I write functionality, mostly to get some experience
   │   weekend, Sunday 1 AM EST / 4 AM. Please refrain from engaging in any   │
   │   rebelious behavior during this time. Thank you!                        │
   │──────────────────────────────────────────────────────────────────────────│
+  │ <<<       +#irc : @#keryx : @#miami.vice : #mIRC : #+scripting        >> │
+  │ nihiven : Marla : !TylerDurden                                           │
+  │──────────────────────────────────────────────────────────────────────────│
   │ /commands and cool things                                                │
   └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -93,16 +94,16 @@ I'm going to write tests as I write functionality, mostly to get some experience
 - Server messages are shown in the main window.
 
 ### Query Window
-```                                                                        
+```
+  Version 2 (move bars to bottom, remove borders, use inverse/color)
   ┌────────────────────────────── irc.keryx.rs ──────────────────────────────┐
-  │ <<< 12 |  +#irc : @#keryx : @#miami.vice : #mIRC : #+scripting   |   >>> │
-  │──────────────────────────────────────────────────────────────────────────│
-  │ TylerDurden                                Away >> Out doing homework... |
+  │ TylerDurden                                  Away: Out doing homework... |
   │──────────────────────────────────────────────────────────────────────────│
   │ >> So, what's up?                                                        │
   │                                                            Chillin... << │
   │ >> Cool. Want to play some ARC Raiders?                                  │
   │                      Maybe, but I need to fix a bug with keryx first. << │
+  │                                                        Ever use Rust? << │
   │                                                                          │
   │                                                                          │
   │                                                                          │
@@ -112,7 +113,9 @@ I'm going to write tests as I write functionality, mostly to get some experience
   │                                                                          │
   │                                                                          │
   │                                                                          │
-  │                                                                          │
+  │──────────────────────────────────────────────────────────────────────────│
+  │ <<< 12    +#irc : @#keryx : @#miami.vice : #mIRC : #+scripting       >>> │
+  │ nihiven : Marla [ !TylerDurden ]                                         │
   │──────────────────────────────────────────────────────────────────────────│
   │ /commands and cool things                                            | ! │
   └──────────────────────────────────────────────────────────────────────────┘
@@ -130,7 +133,6 @@ I'm going to write tests as I write functionality, mostly to get some experience
 ```
   ┌────────────────────────────── Settings ──────────────────────────────────┐
   │ IRC : Servers : User [ Windows ]                                         |
-  │──────────────────────────────────────────────────────────────────────────│
   │ [ Channel ] Query : Status                                               │
   │──────────────────────────────────────────────────────────────────────────│
   │  [X] Show Channel Bar by default.                                        │
@@ -146,8 +148,9 @@ I'm going to write tests as I write functionality, mostly to get some experience
   │                                                                          │
   │                                                                          │
   │                                                                          │
-  │                                                                          │
-  │                                                                          |
+  │──────────────────────────────────────────────────────────────────────────│
+  │ <<< 12    +#irc : @#keryx : @#miami.vice : #mIRC : #+scripting       >>> │
+  │ nihiven : Marla : !TylerDurden                                           │
   │──────────────────────────────────────────────────────────────────────────│
   │ /commands and cool things                              | [ Save ] Cancel │
   └──────────────────────────────────────────────────────────────────────────┘
@@ -165,7 +168,7 @@ This allows the user to scroll through and move between the channels they've joi
 **Left Aligned/Beginning of List**
 ```
   │──────────────────────────────────────────────────────────────────────────│
-  │ [ #3dprinting ] #audiofile : #ARCRaiders : +#irc : @#keryx       | 5 >>> │
+  │ [ #3dprinting ] #audiofile : #ARCRaiders : +#irc : @#keryx         5 >>> │
   │──────────────────────────────────────────────────────────────────────────│
 ```
 
@@ -179,11 +182,11 @@ This allows the user to scroll through and move between the channels they've joi
 **Right Aligned/End of List**
 ```
   │──────────────────────────────────────────────────────────────────────────│
-  │ <<< 5 | #miami.vice : #mIRC : #+scripting [ #takemeback ] #weylandyutani │
+  │ <<< 5   #miami.vice : #mIRC : #+scripting [ #takemeback ] #weylandyutani │
   │──────────────────────────────────────────────────────────────────────────│
 ```
 
-- [ ] How do we show user has the channel highlighted vs selected?
+- [ ] How do we show user has the channel highlighted vs selected? Color? Reverse?
 
 ### Query Bar
 ### Topic Bar
