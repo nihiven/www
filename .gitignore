@@ -3,6 +3,7 @@ node_modules/
 Thumbs.db
 
 # clips
-transcoded/
-thumbnails/
-uploads/
+/clips.jeb.rip/transcoded/
+/clips.jeb.rip/thumbnails/
+/clips.jeb.rip/uploads/
+/clips.jeb.rip/metadata

@@ -231,7 +231,7 @@
           <div class="video-card">
             <div class="video-wrapper">
               <video controls preload="metadata">
-                <source src="<%= video.url %>" type="video/mp4">
+                <source src="<%= video.groupmeUrl || video.url %>" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -241,9 +241,13 @@
                 <%= video.size %> MB • <%= new Date(video.date).toLocaleDateString() %>
               </div>
               <div class="video-actions">
-                <button class="btn btn-primary" onclick="copyShareLink('<%= video.name %>')">Share</button>
-                <button class="btn btn-secondary" onclick="copyUrl('<%= video.url %>')">Copy URL</button>
-                <a href="<%= video.url %>" download class="btn btn-secondary">Download</a>
+                <% if (video.groupmeUrl) { %>
+                  <button class="btn btn-primary" onclick="copyGroupMeUrl('<%= video.groupmeUrl %>')">GroupMe</button>
+                <% } else if (video.groupmeStatus === 'uploading' || video.groupmeStatus === 'pending') { %>
+                  <button class="btn btn-secondary" disabled>GroupMe...</button>
+                <% } %>
+                <button class="btn btn-secondary" onclick="copyShareLink('<%= video.name %>')">Share</button>
+                <button class="btn btn-secondary" onclick="copyUrl('<%= video.url %>')">URL</button>
                 <button class="btn btn-danger" onclick="confirmDelete('<%= video.name %>')">Delete</button>
               </div>
             </div>
@@ -288,6 +292,13 @@
       });
     }
 
+    function copyGroupMeUrl(url) {
+      navigator.clipboard.writeText(url).catch(() => {
+        // Silent fail - clipboard API not available
+        console.error('Clipboard API not available');
+      });
+    }
+
     function confirmDelete(filename) {
       deleteTarget = filename;
       document.getElementById('deleteFileName').textContent = filename;
@@ -302,15 +313,19 @@
     async function deleteVideo() {
       if (!deleteTarget) return;
 
+      // Get password from URL query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const pass = urlParams.get('pass') || '';
+
       try {
-        const response = await fetch(`/videos/${deleteTarget}`, {
+        const response = await fetch(`/videos/${deleteTarget}?pass=${encodeURIComponent(pass)}`, {
           method: 'DELETE'
         });
 
         if (response.ok) {
           location.reload();
         } else {
-          alert('Failed to delete video');
+          alert('Failed to delete video - check password');
         }
       } catch (error) {
         alert('Error: ' + error.message);

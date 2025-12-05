@@ -306,20 +306,78 @@
         xhr.addEventListener('load', () => {
           if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
-            progressFill.style.width = '100%';
-            progressText.textContent = 'Complete!';
-            setTimeout(() => {
-              successMessage.classList.add('active');
-              progressContainer.classList.remove('active');
-              fileInfo.classList.remove('active');
-              dropZone.style.display = 'flex';
-              uploadBtn.disabled = false;
-              selectedFile = null;
-              fileInput.value = '';
-            }, 500);
+
+            // Upload complete, now listen for transcoding progress
+            progressText.textContent = 'Upload complete, transcoding...';
+            progressFill.style.width = '50%';
+
+            // Connect to progress stream
+            const eventSource = new EventSource(`/progress/${response.jobId}`);
+
+            eventSource.onmessage = (event) => {
+              const data = JSON.parse(event.data);
+
+              if (data.status === 'transcoding') {
+                const transcodingProgress = 50 + (data.percent / 2); // Map 0-100% to 50-100%
+                progressFill.style.width = transcodingProgress + '%';
+                progressText.textContent = `Transcoding... ${data.percent}%`;
+              } else if (data.status === 'generating_thumbnail') {
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Generating thumbnail...';
+              } else if (data.status === 'complete') {
+                progressFill.style.width = '100%';
+
+                // Check for GroupMe status
+                if (data.groupmeStatus === 'pending' || data.groupmeStatus === 'uploading') {
+                  progressText.textContent = 'Complete! Uploading to GroupMe...';
+                  // Keep EventSource open to watch for GroupMe completion
+                  return;
+                } else if (data.groupmeStatus === 'complete') {
+                  progressText.textContent = 'Complete! Uploaded to GroupMe.';
+                } else if (data.groupmeStatus === 'error') {
+                  progressText.textContent = 'Complete! (GroupMe upload failed)';
+                } else {
+                  progressText.textContent = 'Complete!';
+                }
+
+                eventSource.close();
+
+                setTimeout(() => {
+                  // Build success message
+                  let message = '<strong>Success!</strong> Video transcoded and ready.';
+                  if (data.groupmeUrl) {
+                    message += `<div style="margin-top: 0.5rem;">✓ Uploaded to GroupMe</div>`;
+                  } else if (data.groupmeStatus === 'error') {
+                    message += `<div style="margin-top: 0.5rem; color: #fbbf24;">⚠ GroupMe upload failed: ${data.groupmeError || 'Unknown error'}</div>`;
+                  }
+
+                  successMessage.innerHTML = message + '<div style="margin-top: 0.5rem;"><a href="/videos">View all clips</a></div>';
+                  successMessage.classList.add('active');
+                  progressContainer.classList.remove('active');
+                  fileInfo.classList.remove('active');
+                  uploadBtn.disabled = false;
+                  selectedFile = null;
+                  fileInput.value = '';
+                }, 500);
+              } else if (data.status === 'error') {
+                eventSource.close();
+                showError(data.error || 'Transcoding failed');
+              }
+            };
+
+            eventSource.onerror = () => {
+              eventSource.close();
+              showError('Connection to server lost');
+            };
+          } else if (xhr.status === 403) {
+            showError('Invalid password - check URL');
           } else {
-            const error = JSON.parse(xhr.responseText);
-            showError(error.error || 'Upload failed');
+            try {
+              const error = JSON.parse(xhr.responseText);
+              showError(error.error || 'Upload failed');
+            } catch (e) {
+              showError('Upload failed');
+            }
           }
         });
 
@@ -327,12 +385,11 @@
           showError('Network error occurred');
         });
 
-        xhr.addEventListener('loadstart', () => {
-          progressText.textContent = 'Uploading and transcoding...';
-          progressFill.style.width = '50%';
-        });
+        // Get password from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const pass = urlParams.get('pass') || '';
 
-        xhr.open('POST', '/upload');
+        xhr.open('POST', `/upload?pass=${encodeURIComponent(pass)}`);
         xhr.send(formData);
 
       } catch (error) {

@@ -147,6 +147,11 @@
 <body>
   <header>
     <h1><%= filename %></h1>
+    <% if (usingGroupMe) { %>
+      <div style="color: #10b981; font-size: 0.85rem; margin-top: 0.5rem;">
+        ⚡
+      </div>
+    <% } %>
     <nav>
       <a href="/">&larr; Upload</a>
       <a href="/videos">All Clips</a>
@@ -167,7 +172,6 @@
       </div>
       <div class="actions">
         <button class="btn btn-primary" onclick="copyUrl()">Copy Share Link</button>
-        <a href="<%= videoUrl %>" download class="btn btn-secondary">Download</a>
         <a href="/videos" class="btn btn-secondary">Back to Gallery</a>
       </div>
     </div>

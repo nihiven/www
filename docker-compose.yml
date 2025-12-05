@@ -82,9 +82,12 @@ services:
       - NODE_ENV=production
       - PORT=32796
       - LIBVA_DRIVER_NAME=iHD
+      - UPLOAD_PASSWORD=change-this-password
+      - GROUPME_ACCESS_TOKEN=your-groupme-access-token
+      - GROUPME_GROUP_ID=your-groupme-group-id
     working_dir: /app
     volumes:
       - /share/MediaOne/www/clips.jeb.rip:/app
     devices:
       - /dev/dri:/dev/dri
-    command: sh -c "apt-get update && apt-get install -y ffmpeg vainfo intel-media-va-driver && npm install && mkdir -p uploads transcoded thumbnails && chmod 777 uploads transcoded thumbnails && node server.js"
+    command: sh -c "apt-get update && apt-get install -y ffmpeg vainfo intel-media-va-driver && npm install && mkdir -p uploads transcoded thumbnails metadata && chmod 777 uploads transcoded thumbnails metadata && node server.js"
