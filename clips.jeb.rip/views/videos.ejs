@@ -242,12 +242,12 @@
               </div>
               <div class="video-actions">
                 <% if (video.groupmeUrl) { %>
-                  <button class="btn btn-primary" onclick="copyGroupMeUrl('<%= video.groupmeUrl %>')">GroupMe</button>
+                  <button class="btn btn-primary" onclick="showPostModal('<%= video.name %>')">Post</button>
+                  <button class="btn btn-secondary" onclick="copyGroupMeUrl('<%= video.groupmeUrl %>')">Copy</button>
                 <% } else if (video.groupmeStatus === 'uploading' || video.groupmeStatus === 'pending') { %>
                   <button class="btn btn-secondary" disabled>GroupMe...</button>
                 <% } %>
                 <button class="btn btn-secondary" onclick="copyShareLink('<%= video.name %>')">Share</button>
-                <button class="btn btn-secondary" onclick="copyUrl('<%= video.url %>')">URL</button>
                 <button class="btn btn-danger" onclick="confirmDelete('<%= video.name %>')">Delete</button>
               </div>
             </div>
@@ -255,6 +255,29 @@
         <% }); %>
       </div>
     <% } %>
+  </div>
+
+  <!-- Post to GroupMe Modal -->
+  <div class="modal" id="postModal">
+    <div class="modal-content">
+      <div class="modal-title">Post to GroupMe</div>
+      <div class="modal-body">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; color: #e0e0e0;">Select Group:</label>
+          <select id="groupSelect" style="width: 100%; padding: 0.5rem; background: #222; border: 1px solid #333; border-radius: 6px; color: #e0e0e0; font-size: 0.9rem;">
+            <option value="">Loading groups...</option>
+          </select>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; color: #e0e0e0;">Message (optional):</label>
+          <input type="text" id="postMessage" placeholder="Add a message..." style="width: 100%; padding: 0.5rem; background: #222; border: 1px solid #333; border-radius: 6px; color: #e0e0e0; font-size: 0.9rem;">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closePostModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="postToGroupMe()">Post</button>
+      </div>
+    </div>
   </div>
 
   <!-- Delete Confirmation Modal -->
@@ -274,6 +297,91 @@
 
   <script>
     let deleteTarget = null;
+    let postTarget = null;
+    let groupmeGroups = [];
+
+    // Load GroupMe groups on page load
+    async function loadGroupMeGroups() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pass = urlParams.get('pass') || '';
+
+      try {
+        const response = await fetch(`/api/groupme/groups?pass=${encodeURIComponent(pass)}`);
+        if (response.ok) {
+          const data = await response.json();
+          groupmeGroups = data.groups;
+          updateGroupSelect();
+        } else {
+          console.error('Failed to load GroupMe groups');
+        }
+      } catch (error) {
+        console.error('Error loading GroupMe groups:', error);
+      }
+    }
+
+    function updateGroupSelect() {
+      const select = document.getElementById('groupSelect');
+      if (groupmeGroups.length === 0) {
+        select.innerHTML = '<option value="">No groups available</option>';
+      } else {
+        select.innerHTML = '<option value="">Select a group...</option>' +
+          groupmeGroups.map(group => `<option value="${group.id}">${group.name}</option>`).join('');
+      }
+    }
+
+    function showPostModal(filename) {
+      postTarget = filename;
+      document.getElementById('postMessage').value = '';
+      document.getElementById('postModal').classList.add('active');
+
+      // Load groups if not already loaded
+      if (groupmeGroups.length === 0) {
+        loadGroupMeGroups();
+      }
+    }
+
+    function closePostModal() {
+      postTarget = null;
+      document.getElementById('postModal').classList.remove('active');
+    }
+
+    async function postToGroupMe() {
+      if (!postTarget) return;
+
+      const groupId = document.getElementById('groupSelect').value;
+      const message = document.getElementById('postMessage').value;
+
+      if (!groupId) {
+        alert('Please select a group');
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const pass = urlParams.get('pass') || '';
+
+      try {
+        const response = await fetch(`/api/groupme/post?pass=${encodeURIComponent(pass)}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            groupId: groupId,
+            filename: postTarget,
+            message: message
+          })
+        });
+
+        if (response.ok) {
+          closePostModal();
+        } else {
+          const error = await response.json();
+          alert('Failed to post: ' + (error.error || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
 
     function copyShareLink(filename) {
       const baseFilename = filename.replace('.mp4', '');
@@ -338,6 +446,7 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeDeleteModal();
+        closePostModal();
       }
     });
 
@@ -345,6 +454,12 @@
     document.getElementById('deleteModal').addEventListener('click', (e) => {
       if (e.target.id === 'deleteModal') {
         closeDeleteModal();
+      }
+    });
+
+    document.getElementById('postModal').addEventListener('click', (e) => {
+      if (e.target.id === 'postModal') {
+        closePostModal();
       }
     });
   </script>

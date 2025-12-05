@@ -313,6 +313,7 @@
 
             // Connect to progress stream
             const eventSource = new EventSource(`/progress/${response.jobId}`);
+            let jobCompleted = false;
 
             eventSource.onmessage = (event) => {
               const data = JSON.parse(event.data);
@@ -340,6 +341,7 @@
                   progressText.textContent = 'Complete!';
                 }
 
+                jobCompleted = true;
                 eventSource.close();
 
                 setTimeout(() => {
@@ -360,6 +362,7 @@
                   fileInput.value = '';
                 }, 500);
               } else if (data.status === 'error') {
+                jobCompleted = true;
                 eventSource.close();
                 showError(data.error || 'Transcoding failed');
               }
@@ -367,7 +370,10 @@
 
             eventSource.onerror = () => {
               eventSource.close();
-              showError('Connection to server lost');
+              // Only show error if job didn't complete successfully
+              if (!jobCompleted) {
+                showError('Connection to server lost');
+              }
             };
           } else if (xhr.status === 403) {
             showError('Invalid password - check URL');

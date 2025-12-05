@@ -243,6 +243,9 @@ const upload = multer({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Parse JSON bodies
+app.use(express.json());
+
 // Serve static files
 app.use('/transcoded', express.static(transcodedDir));
 app.use('/thumbnails', express.static(path.join(__dirname, 'thumbnails')));
@@ -378,9 +381,9 @@ app.post('/upload', requireAuth, upload.single('video'), async (req, res) => {
       '-hwaccel_output_format vaapi',
     ])
     .outputOptions([
-      '-vf scale_vaapi=format=nv12',
+      '-vf scale_vaapi=w=\'min(1280,iw)\':h=\'min(720,ih)\':format=nv12',
       '-c:v h264_vaapi',
-      '-qp 23',
+      '-qp 28',
       '-c:a aac',
       '-b:a 128k',
       '-movflags +faststart',
@@ -488,18 +491,166 @@ app.post('/upload', requireAuth, upload.single('video'), async (req, res) => {
 // Delete video endpoint
 app.delete('/videos/:filename', requireAuth, (req, res) => {
   const filename = req.params.filename;
-  const filePath = path.join(transcodedDir, filename);
+  const videoPath = path.join(transcodedDir, filename);
 
-  if (!fs.existsSync(filePath)) {
+  if (!fs.existsSync(videoPath)) {
     return res.status(404).json({ error: 'File not found' });
   }
 
-  fs.unlink(filePath, err => {
+  const jobId = path.basename(filename, '.mp4');
+  const thumbnailPath = path.join(thumbnailsDir, `${jobId}.jpg`);
+  const metadataPath = getMetadataPath(jobId);
+
+  // Delete video file
+  fs.unlink(videoPath, err => {
     if (err) {
-      return res.status(500).json({ error: 'Failed to delete file' });
+      return res.status(500).json({ error: 'Failed to delete video file' });
     }
+
+    // Delete thumbnail if exists
+    if (fs.existsSync(thumbnailPath)) {
+      fs.unlink(thumbnailPath, err => {
+        if (err) console.error('Error deleting thumbnail:', err);
+      });
+    }
+
+    // Delete metadata if exists
+    if (fs.existsSync(metadataPath)) {
+      fs.unlink(metadataPath, err => {
+        if (err) console.error('Error deleting metadata:', err);
+      });
+    }
+
     res.json({ success: true });
   });
+});
+
+// Get GroupMe groups list
+app.get('/api/groupme/groups', requireAuth, async (req, res) => {
+  const accessToken = process.env.GROUPME_ACCESS_TOKEN;
+
+  if (!accessToken) {
+    return res.status(500).json({ error: 'GroupMe token not configured' });
+  }
+
+  try {
+    const groupsData = await new Promise((resolve, reject) => {
+      https
+        .get(
+          `https://api.groupme.com/v3/groups?token=${accessToken}`,
+          response => {
+            let data = '';
+            response.on('data', chunk => (data += chunk));
+            response.on('end', () => {
+              if (response.statusCode === 200) {
+                resolve(JSON.parse(data));
+              } else {
+                reject(
+                  new Error(`GroupMe API error: ${response.statusCode}`)
+                );
+              }
+            });
+          }
+        )
+        .on('error', reject);
+    });
+
+    // Extract just the needed group info
+    const groups = groupsData.response.map(group => ({
+      id: group.id,
+      name: group.name,
+    }));
+
+    res.json({ groups });
+  } catch (err) {
+    console.error('Error fetching GroupMe groups:', err);
+    res.status(500).json({ error: 'Failed to fetch groups' });
+  }
+});
+
+// Post video to GroupMe group
+app.post('/api/groupme/post', requireAuth, async (req, res) => {
+  const accessToken = process.env.GROUPME_ACCESS_TOKEN;
+  const { groupId, filename, message } = req.body;
+
+  if (!accessToken) {
+    return res.status(500).json({ error: 'GroupMe token not configured' });
+  }
+
+  if (!groupId || !filename) {
+    return res.status(400).json({ error: 'Missing groupId or filename' });
+  }
+
+  try {
+    // Load metadata to get GroupMe URLs
+    const jobId = path.basename(filename, '.mp4');
+    const metadata = loadMetadata(jobId);
+
+    if (!metadata || !metadata.groupmeUrl) {
+      return res
+        .status(400)
+        .json({ error: 'Video not uploaded to GroupMe yet' });
+    }
+
+    // Generate unique GUID for message
+    const guid =
+      Date.now().toString() + '-' + Math.random().toString(36).substring(2, 15);
+
+    // Build message body
+    const messageBody = {
+      message: {
+        source_guid: guid,
+        text: message || '',
+        attachments: [
+          {
+            type: 'video',
+            url: metadata.groupmeUrl,
+            preview_url: metadata.groupmeThumbnail,
+          },
+        ],
+      },
+    };
+
+    // Post to GroupMe
+    const postData = JSON.stringify(messageBody);
+    const postUrl = new URL(
+      `https://api.groupme.com/v3/groups/${groupId}/messages?token=${accessToken}`
+    );
+
+    const response = await new Promise((resolve, reject) => {
+      const options = {
+        hostname: postUrl.hostname,
+        path: postUrl.pathname + postUrl.search,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(postData),
+        },
+      };
+
+      const req = https.request(options, res => {
+        let data = '';
+        res.on('data', chunk => (data += chunk));
+        res.on('end', () => {
+          if (res.statusCode === 201) {
+            resolve(JSON.parse(data));
+          } else {
+            reject(new Error(`GroupMe post failed: ${res.statusCode}`));
+          }
+        });
+      });
+
+      req.on('error', reject);
+      req.write(postData);
+      req.end();
+    });
+
+    console.log(`Posted ${filename} to GroupMe group ${groupId}`);
+    res.json({ success: true, response });
+  } catch (err) {
+    console.error('Error posting to GroupMe:', err);
+    res.status(500).json({ error: 'Failed to post to GroupMe' });
+  }
 });
 
 app.listen(PORT, () => {
