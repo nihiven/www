@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Keryx
   keryx:
-    image: node:latest
+    image: node:20-slim
     container_name: keryx-nvn-io
     network_mode: 'host'
     restart: unless-stopped
@@ -18,7 +18,7 @@ services:
 
   # JustinBehanna.com/net/org
   justinbehanna:
-    image: node:latest
+    image: node:20-slim
     container_name: justinbehanna-xxx
     network_mode: 'host'
     restart: unless-stopped
@@ -32,7 +32,7 @@ services:
     command: sh -c "npm install && node assets/js/server.js"
 
   nihiven:
-    image: node:latest
+    image: node:20-slim
     container_name: nihiven-xxx
     network_mode: 'host'
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
     command: sh -c "npm install && node assets/js/server.js"
 
   glitchrock:
-    image: node:latest
+    image: node:20-slim
     container_name: glitchrock-xxx
     network_mode: 'host'
     restart: unless-stopped
@@ -60,7 +60,7 @@ services:
     command: sh -c "npm install && node assets/js/server.js"
 
   samus-cam:
-    image: node:latest
+    image: node:20-slim
     container_name: samus-cam
     network_mode: 'host'
     restart: unless-stopped
