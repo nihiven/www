@@ -217,3 +217,7 @@ The editbox allows the user to type and paste text. It also has a right aligned 
 │ /commands and cool things                              | [ Save ] Cancel │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
+
+### Making Use of Windows
+
+**JOIN**

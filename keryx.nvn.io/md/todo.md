@@ -32,10 +32,30 @@
         - [X] Channel
         - [X] Query
         - [ ] Settings (later)
-    - [ ] Basic Window Nav Bar (horizontal list + selection indicator)
-        - [ ] Channel Bar
+    - [X] Basic Window Nav Bar (horizontal list + selection indicator)
+        - [X] Channel Bar
         - [ ] Query Bar
         - [ ] Topic Bar
+    - [X] Basic [JOIN](https://modern.ircdocs.horse/#join-message) parsing (user can join channels)
+    - [ ] Basic [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message) parsing (channel messages show in correct window)
+    - [ ] Send channel messages with: /PRIVMSG, /MSG, editbox
+    - [ ] Basic window switching (alt + <key> to change windows)
+    - [ ] Add nick list to channel window 
+    - [ ] [JOIN](https://modern.ircdocs.horse/#join-message)
+        - [ ] RPL_TOPIC (332)
+            - [ ] Topic Bar
+        - [ ] RPL_TOPICWHOTIME (333)
+        - [ ] RPL_NAMREPLY (353)
+        - [ ] RPL_ENDOFNAMES (366)
+        - [ ] Errors
+            - [ ] ERR_NEEDMOREPARAMS (461)
+            - [ ] ERR_NOSUCHCHANNEL (403)
+            - [ ] ERR_TOOMANYCHANNELS (405)
+            - [ ] ERR_BADCHANNELKEY (475)
+            - [ ] ERR_BANNEDFROMCHAN (474)
+            - [ ] ERR_CHANNELISFULL (471)
+            - [ ] ERR_INVITEONLYCHAN (473)
+            - [ ] ERR_BADCHANMASK (476) 
 
 ### Features
 - [ ] Review: https://modern.ircdocs.horse/#message-parsing-and-assembly
@@ -48,6 +68,8 @@
 - [ ] Config window
 - [ ] Styled text
 - [ ] Compress like events into one line? JOIN/PART/PRIVMSG event?
+- [ ] Timestamp
+    - [ ] Formats
 
 ### Polish
 - [ ] Rust doc comments

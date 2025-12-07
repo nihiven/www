@@ -7,3 +7,6 @@ Thumbs.db
 /clips.jeb.rip/thumbnails/
 /clips.jeb.rip/uploads/
 /clips.jeb.rip/metadata
+
+# png shrinker
+oxipng.exe
