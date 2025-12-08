@@ -49,14 +49,14 @@ I'm going to write tests as I write functionality, mostly to get some experience
   │ <Matrix> anyone know how to get blood out of cotton?         │           │
   │ <@nihiven> i'm trying a new soap.                            │           │
   │            its seems good so far, might work                 │           │
-  | [JOIN] Dutch <arnold@whatthehell.ru>
+  | [JOIN] Dutch <arnold@whatthehell.ru>                         |           |
   │──────────────────────────────────────────────────────────────┴───────────│
   │ <<< 12    +#irc [ @#keryx ] @#miami.vice : #mIRC : #+scripting       >>> │
   │ nihiven : Marla : !TylerDurden                                           │
-  │──────────────────────────────────────────────────────────────────────────│ 
+  │──────────────────────────────────────────────────────────────────────────│
   │ /commands and cool things                                                │
   └──────────────────────────────────────────────────────────────────────────┘
-```                                                                                        
+```
 - Channel tab bar shows active channel as [ #channel ] and shows your mode on the channel. The arrows at the end show how many channels are to the left/right. It shows one arrow for each channel, up to three arrows. When it hits four+ channels, it shows three arrows and a number that indicates the total.
 - Query tab bar shows underneath the channel tab bar when both are open.
 - Nicklist is responsive. Wide when window is wide, as small as possible when window is medium, and hidden when the window is small. User can open it with some command or hotkey.
@@ -66,7 +66,7 @@ I'm going to write tests as I write functionality, mostly to get some experience
 
 ### Status Window
 ```
-  Version 2 (move bars to bottom, remove borders, use inverse/color)                                                                        
+  Version 2 (move bars to bottom, remove borders, use inverse/color)
   ┌────────────────────────────── irc.keryx.rs ──────────────────────────────┐
   │ keryx.Status                                                 nihiven +iw |
   │──────────────────────────────────────────────────────────────────────────│
@@ -119,7 +119,7 @@ I'm going to write tests as I write functionality, mostly to get some experience
   │──────────────────────────────────────────────────────────────────────────│
   │ /commands and cool things                                            | ! │
   └──────────────────────────────────────────────────────────────────────────┘
-```   
+```
 - The query window shows the channel tab bar at the top with no active channel.
 - The User bar shows the nick of the user you are private messaging with. It also shows their away status, if one is set.
 - Messages are shown in the main window using the familiar left/right text messaging style.
@@ -195,7 +195,7 @@ This allows the user to scroll through and move between the channels they've joi
 The editbox allows the user to type and paste text. It also has a right aligned multi-use 'widget' (known as the right pocket?), which can:
 - Show user alerts: Friend alerts? Invites? Mentions?
 - Allow for additional areas of input: Ok/Cancel buttons
-- Show the user misc information: Leet MP3 messages? 
+- Show the user misc information: Leet MP3 messages?
 
 **Standard**
 ```

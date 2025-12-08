@@ -2,41 +2,64 @@
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Space+Mono:wght@400;700&display=swap');
 
   body {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
-    font-family: 'IBM Plex Sans', 'Space Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family:
+      'IBM Plex Sans',
+      'Space Mono',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: #f5d89d;
+    background-color: #161616;
   }
   code {
-    background: #f4f4f4;
+    color: #ebebeb;
+    background: #3e4754;
     padding: 2px 6px;
     border-radius: 3px;
-    font-family: 'IBM Plex Mono', 'Space Mono', 'Courier New', monospace;
+    border-color: #000000;
+    border-width: 2px;
+    width: fit-content;
+    font-family:
+      'Consolas', 'IBM Plex Mono', 'Space Mono', 'Courier New', monospace;
   }
   pre {
-    background: #f4f4f4;
+    color: #ebebeb;
+    background: #3e4754;
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 3px;
     overflow-x: auto;
+    border-color: #000000;
+    border-width: 2px;
+    width: fit-content;
   }
   pre code {
     background: none;
     padding: 0;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #faae16;
     margin-top: 24px;
     margin-bottom: 16px;
     font-weight: 600;
     font-family: 'IBM Plex Sans', 'Space Mono', sans-serif;
   }
   a {
-    color: #0366d6;
-    text-decoration: none;
+    color: #da9d8b;
+    text-decoration: underline dotted;
   }
   a:hover {
     text-decoration: underline;
+    color: #d95d39;
   }
   img {
     max-width: 100%;
@@ -52,7 +75,8 @@
     width: 100%;
     margin: 16px 0;
   }
-  table th, table td {
+  table th,
+  table td {
     border: 1px solid #ddd;
     padding: 8px 12px;
     text-align: left;

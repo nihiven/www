@@ -25,37 +25,22 @@
 - [X] Basic client->server command processing
 - [X] Baby's first Rust tests
 - [X] Map /commands to Rust functions
-- [X] [Multiple windows / branch: windows](/branch/windows-001.md)
+- [ ] [Multiple windows / branch: windows](/branch/windows-001.md)
     - [ ] Window Data Structures
         - [X] Window Manager
         - [X] Status
         - [X] Channel
         - [X] Query
-        - [ ] Settings (later)
-    - [X] Basic Window Nav Bar (horizontal list + selection indicator)
+    - [X] Basic Window Nav Bars (horizontal list + selection indicator)
         - [X] Channel Bar
         - [ ] Query Bar
-        - [ ] Topic Bar
     - [X] Basic [JOIN](https://modern.ircdocs.horse/#join-message) parsing (user can join channels)
-    - [ ] Basic [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message) parsing (channel messages show in correct window)
-    - [ ] Send channel messages with: /PRIVMSG, /MSG, editbox
+    - [ ] Basic [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message) parsing (channel/query messages show in correct window)
     - [ ] Basic window switching (alt + <key> to change windows)
+- [ ] Post windows branch
+    - [ ] Send channel messages with: /PRIVMSG, /MSG, editbox
     - [ ] Add nick list to channel window 
-    - [ ] [JOIN](https://modern.ircdocs.horse/#join-message)
-        - [ ] RPL_TOPIC (332)
-            - [ ] Topic Bar
-        - [ ] RPL_TOPICWHOTIME (333)
-        - [ ] RPL_NAMREPLY (353)
-        - [ ] RPL_ENDOFNAMES (366)
-        - [ ] Errors
-            - [ ] ERR_NEEDMOREPARAMS (461)
-            - [ ] ERR_NOSUCHCHANNEL (403)
-            - [ ] ERR_TOOMANYCHANNELS (405)
-            - [ ] ERR_BADCHANNELKEY (475)
-            - [ ] ERR_BANNEDFROMCHAN (474)
-            - [ ] ERR_CHANNELISFULL (471)
-            - [ ] ERR_INVITEONLYCHAN (473)
-            - [ ] ERR_BADCHANMASK (476) 
+
 
 ### Features
 - [ ] Review: https://modern.ircdocs.horse/#message-parsing-and-assembly
@@ -65,20 +50,43 @@
     - [ ] History
     - [ ] Auto-complete
     - [ ] Right Pocket
-- [ ] Config window
 - [ ] Styled text
-- [ ] Compress like events into one line? JOIN/PART/PRIVMSG event?
 - [ ] Timestamp
-    - [ ] Formats
+- [ ] Message Formatting
+    - [ ] Events: JOIN, PART, NOTICE
+    - [ ] Timestamp
+- [ ] Channel Window
+    - [ ] PRIVMSG: Show users' channel mode (op, voice)
+    - [ ] Topic bar
+    - [ ] Nicklist
+    - [ ] Compress like events into one line? JOIN/PART/PRIVMSG event?
+- [ ] Settings
+    - API
+    - Window
 
 ### Polish
 - [ ] Rust doc comments
 - [ ] Review polling rate (POLLING_INTERVAL)
 - [ ] Validate nick against IRC requirements
+- [ ] Nav bar refactor
 
 ### Server Commands
 - [ ] CAP
-- [ ] JOIN
+- [ ] [JOIN](https://modern.ircdocs.horse/#join-message)
+    - [ ] RPL_TOPIC (332)
+        - [ ] Topic Bar
+    - [ ] RPL_TOPICWHOTIME (333)
+    - [ ] RPL_NAMREPLY (353)
+    - [ ] RPL_ENDOFNAMES (366)
+    - [ ] Errors
+        - [ ] ERR_NEEDMOREPARAMS (461)
+        - [ ] ERR_NOSUCHCHANNEL (403)
+        - [ ] ERR_TOOMANYCHANNELS (405)
+        - [ ] ERR_BADCHANNELKEY (475)
+        - [ ] ERR_BANNEDFROMCHAN (474)
+        - [ ] ERR_CHANNELISFULL (471)
+        - [ ] ERR_INVITEONLYCHAN (473)
+        - [ ] ERR_BADCHANMASK (476) 
 - [ ] MODE
 - [ ] MOTD
 - [ ] NICK
