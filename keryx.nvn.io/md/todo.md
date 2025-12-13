@@ -1,7 +1,7 @@
 # IRC Specs
 * [Modern IRC Client Protocol](https://modern.ircdocs.horse/)
 * [IRCv3 Specifications](https://ircv3.net/irc/)
-
+* [Effective Rust](https://effective-rust.com/title-page.html)
 
 ## To-Do Items
 
@@ -25,8 +25,8 @@
 - [X] Basic client->server command processing
 - [X] Baby's first Rust tests
 - [X] Map /commands to Rust functions
-- [ ] [Multiple windows / branch: windows](/branch/windows-001.md)
-    - [ ] Window Data Structures
+- [X] [Multiple windows / branch: windows](/branch/windows-001.md)
+    - [X] Window Data Structures
         - [X] Window Manager
         - [X] Status
         - [X] Channel
@@ -35,19 +35,25 @@
         - [X] Channel Bar
         - [ ] Query Bar
     - [X] Basic [JOIN](https://modern.ircdocs.horse/#join-message) parsing (user can join channels)
-    - [ ] Basic [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message) parsing (channel/query messages show in correct window)
-    - [ ] Basic window switching (alt + <key> to change windows)
-- [ ] Post windows branch
-    - [ ] Send channel messages with: /PRIVMSG, /MSG, editbox
-    - [ ] Add nick list to channel window 
-
+    - [X] Basic [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message) parsing (channel/query messages show in correct window)
+    - [X] Basic window switching (alt + <key> to change windows)
+    - [X] Close windows: /close + /part
+    - [X] Tests + Bug Fixes + clippy
+        - [X] Case-insensitive window name matching
+        - [X] Stop sending Action::None to main loop
+- [X] Refactor message/command code in main
+- [ ] Send channel messages with: /PRIVMSG, /MSG, editbox
+- [ ] Add nick list to channel window
 
 ### Features
 - [ ] Review: https://modern.ircdocs.horse/#message-parsing-and-assembly
 - [ ] Client side/app commands, such as: /exit
+- [ ] Bar API
+    - [ ] Multiple Types
+    - [ ] Activity Indicators
+    - [ ] Custom key bindings
 - [ ] Key binds
 - [ ] Editbox
-    - [ ] History
     - [ ] Auto-complete
     - [ ] Right Pocket
 - [ ] Styled text
@@ -61,15 +67,19 @@
     - [ ] Nicklist
     - [ ] Compress like events into one line? JOIN/PART/PRIVMSG event?
 - [ ] Settings
-    - API
-    - Window
-
-### Polish
-- [ ] Rust doc comments
-- [ ] Review polling rate (POLLING_INTERVAL)
-- [ ] Validate nick against IRC requirements
-- [ ] Nav bar refactor
-
+    - [ ] API
+    - [ ] Window
+- [ ] History
+    - [ ] Channel
+    - [ ] Editbox
+    - [ ] Query
+- [ ] Polish
+    - [ ] Rust doc comments
+    - [ ] Review polling rate (POLLING_INTERVAL)
+    - [ ] Validate nick against IRC requirements
+    - [ ] On window close, activate window to the Left in the list, instead of Status. Setting?
+    - [ ] Rejoin open channels on connect. Setting?
+ 
 ### Server Commands
 - [ ] CAP
 - [ ] [JOIN](https://modern.ircdocs.horse/#join-message)
@@ -92,16 +102,20 @@
 - [ ] NICK
 - [X] NOTICE
     - [ ] Setting: Always show in Active/Status
+- [ ] PART
+    - [X] Basic handling
 - [ ] PRIVMSG
 - [ ] QUIT
 
 ### User /Commands
 - [ ] CAP
+- [X] CLOSE
 - [X] JOIN
 - [ ] MODE
 - [ ] MOTD
 - [X] NICK
 - [ ] NOTICE
+- [X] PART
 - [X] PRIVMSG
 - [X] QUIT
 - [ ] QUOTE
@@ -117,3 +131,7 @@ Skipped: 002 003
 - [ ] Multiple server connections
 - [ ] Themes
 - [ ] SSL
+- [ ] Music player integration? (foobar)
+
+## Old Branch Notes
+[windows-001](/branch/windows-001.md): add WindowManager and supporting code

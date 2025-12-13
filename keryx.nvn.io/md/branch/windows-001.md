@@ -26,9 +26,9 @@ I'm going to write tests as I write functionality, mostly to get some experience
 - [ ] Use inverse or color (optional)
 
 ## Types of Windows
-- [ ] Status - same as mIRC Status window
-- [ ] #Channel - right nicklist style?
-- [ ] Query - private message windows
+- [X] Status - same as mIRC Status window
+- [X] #Channel - right nicklist style?
+- [X] Query - private message windows
 - [ ] Keryx Settings - let user change app settings
 
 ### #Channel Window
