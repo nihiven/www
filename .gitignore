@@ -10,3 +10,8 @@ Thumbs.db
 
 # png shrinker
 oxipng.exe
+
+# generated html files
+**/html/
+
+/test/

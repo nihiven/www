@@ -1,0 +1,134 @@
+/*
+ * Green Phosphor CRT Theme
+ * The iconic green terminal look
+ */
+
+:root {
+    --crt-bg: #0a1a0a;
+    --crt-bg-dark: #0d220d;
+    --crt-fg: #33ff33;
+    --crt-glow: rgba(51, 255, 51, 0.5);
+}
+
+/* Base styles */
+.crt {
+    font-family: 'VT323', 'Courier New', monospace;
+    background: var(--crt-bg);
+    color: var(--crt-fg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Scanline overlay */
+.crt::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* CRT vignette effect */
+.crt::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+    z-index: 99;
+}
+
+/* Text glow effect */
+.crt-glow {
+    text-shadow: 0 0 10px var(--crt-glow);
+}
+
+/* Strong glow for headings/emphasis */
+.crt-glow-strong {
+    text-shadow: 
+        0 0 5px var(--crt-fg),
+        0 0 10px var(--crt-glow),
+        0 0 20px var(--crt-glow);
+}
+
+/* Pixel element (lit) */
+.pixel-on {
+    background: var(--crt-fg);
+    box-shadow: 0 0 4px var(--crt-glow);
+}
+
+/* Pixel element (unlit) */
+.pixel-off {
+    background: var(--crt-bg-dark);
+}
+
+/* Input fields */
+.crt-input {
+    background: var(--crt-bg-dark);
+    border: 1px solid var(--crt-fg);
+    color: var(--crt-fg);
+    font-family: inherit;
+    padding: 8px 12px;
+    outline: none;
+}
+
+.crt-input:focus {
+    box-shadow: 0 0 8px var(--crt-glow);
+}
+
+/* Buttons */
+.crt-button {
+    background: var(--crt-bg-dark);
+    border: 2px solid var(--crt-fg);
+    color: var(--crt-fg);
+    font-family: inherit;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.crt-button:hover {
+    background: var(--crt-fg);
+    color: var(--crt-bg);
+    box-shadow: 0 0 15px var(--crt-glow);
+}
+
+/* Blinking cursor */
+.crt-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.2em;
+    background: var(--crt-fg);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Optional screen flicker */
+.crt-flicker {
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.97; }
+    50% { opacity: 1; }
+    100% { opacity: 0.98; }
+}

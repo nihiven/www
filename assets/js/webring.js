@@ -19,13 +19,11 @@ function getWebRingHTML(currentSite) {
   // If site not found in ring, just show all sites
   if (currentIndex === -1) {
     const links = webringSites
-      .map(
-        site => `<a href="${site.url}" style="margin: 0 10px;">${site.name}</a>`
-      )
-      .join(' | ');
+      .map(site => `<a href="${site.url}">${site.name}</a>`)
+      .join(' : ');
 
     return `
-      <div style="border-top: 2px solid #ddd; margin-top: 40px; padding-top: 20px; text-align: center; font-size: 14px; color: #666;">
+      <div class="webring-container">
         <div>${links}</div>
       </div>
     `;
@@ -41,11 +39,11 @@ function getWebRingHTML(currentSite) {
   const randomSite = otherSites[Math.floor(Math.random() * otherSites.length)];
 
   return `
-    <div style="border-top: 2px solid #ddd; margin-top: 40px; padding-top: 20px; text-align: center; font-size: 14px; color: #666;">
+    <div class="webring-container">
       <div>
-        <a href="${webringSites[prevIndex].url}" style="margin: 0 10px;">← ${webringSites[prevIndex].name}</a>
-        :: <a href="${randomSite.url}" style="margin: 0 10px;">random</a> :: 
-        <a href="${webringSites[nextIndex].url}" style="margin: 0 10px;">${webringSites[nextIndex].name} →</a>
+        <a href="${webringSites[prevIndex].url}">← ${webringSites[prevIndex].name}</a>
+        <a href="${randomSite.url}">random</a>
+        <a href="${webringSites[nextIndex].url}">${webringSites[nextIndex].name} →</a>
       </div>
     </div>
   `;

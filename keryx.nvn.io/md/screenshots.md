@@ -1,3 +1,12 @@
+**2025-12-16**
+
+- Basic nicklist
+- Query windows
+- Navigation hotkeys
+- Timestamps
+
+![December 7, 2025](/assets/img/keryx-screenshot-0003.png)
+
 **2025-12-07**
 
 - Basic Channel Window

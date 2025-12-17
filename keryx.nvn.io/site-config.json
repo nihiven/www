@@ -1,5 +1,11 @@
 {
   "address": "keryx.nvn.io",
-  "name": "Keryx IRC",
-  "title": ":: keryx has joined #irc"
+  "name": "/keryx",
+  "title": ":: keryx has joined #irc",
+  "theme": "apple2",
+  "headerButtons": [
+    { "label": "Home", "url": "index.html" },
+    { "label": "Todo", "url": "todo.html" },
+    { "label": "Screenshots", "url": "screenshots.html" }
+  ]
 }
