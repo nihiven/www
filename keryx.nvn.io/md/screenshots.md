@@ -1,3 +1,16 @@
+**2025-12-28**
+
+- Styling and templates!
+- JOIN/PART
+
+![December 28, 2025](/assets/img/keryx-screenshot-0005.png)
+
+**2025-12-21**
+
+- Color!
+
+![December 21, 2025](/assets/img/keryx-screenshot-0004.png)
+
 **2025-12-16**
 
 - Basic nicklist
@@ -5,7 +18,7 @@
 - Navigation hotkeys
 - Timestamps
 
-![December 7, 2025](/assets/img/keryx-screenshot-0003.png)
+![December 16, 2025](/assets/img/keryx-screenshot-0003.png)
 
 **2025-12-07**
 

@@ -53,11 +53,24 @@
 - [X] Send channel messages with: /PRIVMSG, /MSG, editbox
 - [X] Timestamp (basic)
 - [X] Editbox cursor (basic)
-- [ ] Add nick list to channel window
+- [X] Add nick list to channel window
     - [X] Update window to hold channel data
     - [X] Handle 353 and 366
-    - [ ] Draw nicklist!
-    - [ ] TESTS
+    - [X] Draw nicklist!
+    - [X] TESTS
+- [ ] Settings
+    - [X] Basic
+    - [ ] API
+    - [ ] Window
+- [X] Break messages into a struct: timestmap, prefix, nick, content 
+- [X] Basic Color
+- [X] [styling-and-templates](./branch/002-styling-and-templates.md)
+    - [X] Basic styling functions
+    - [X] Basic Template function
+- [ ] QUIT
+    - [ ] Display disconnected messages in all channels+status when disconnected
+    - [X] Show user quit messages
+    - [X] remove user from nicklist
 
 ### <a name="planned"></a>Planned Items
 - [ ] Review: https://modern.ircdocs.horse/#message-parsing-and-assembly
@@ -71,6 +84,7 @@
     - [ ] Auto-complete
     - [ ] Right Pocket
     - [ ] Proper cursor movement and text selection
+    - [ ] Windows emoji entry doesn't work
 - [ ] Styled text
 - [ ] Timestamp
     - [ ] format
@@ -84,9 +98,6 @@
     - [ ] Topic bar
     - [ ] Nicklist
     - [ ] Compress like events into one line? JOIN/PART/PRIVMSG event?
-- [ ] Settings
-    - [ ] API
-    - [ ] Window
 - [ ] History
     - [ ] Channel
     - [ ] Editbox
@@ -103,6 +114,7 @@
 - [ ] RPL_ISUPPORT
     - [ ] User Modes
 - [ ] ratatui-image
+- [ ] Automated builds: https://robey.lag.net/2025/08/10/forgejo-ci.html
 
 ### <a name="server_cmd"></a>Server Commands
 - [ ] ACTION (/me)
@@ -124,14 +136,17 @@
         - [ ] ERR_INVITEONLYCHAN (473)
         - [ ] ERR_BADCHANMASK (476)
 - [ ] MODE
+    - [ ] add user prefix to nav bar: @#keryx +#irc
 - [ ] MOTD
 - [ ] NICK
 - [X] NOTICE
     - [ ] Setting: Always show in Active/Status
 - [ ] PART
     - [X] Basic handling
+    - [X] Remove user from nicklist
+    - [ ] Setting: show nick address
 - [ ] PRIVMSG
-- [ ] QUIT
+
 
 ### <a name="user_cmd"></a>User /Commands
 - [ ] ACTION (/me)
@@ -139,7 +154,9 @@
 - [X] CLOSE
 - [ ] [CTCP](https://rawgit.com/DanielOaks/irc-rfcs/master/dist/draft-oakley-irc-ctcp-latest.html)
 - [ ] ECHO
-- [X] [JOIN](https://modern.ircdocs.horse/#join-message)
+- [ ] [JOIN](https://modern.ircdocs.horse/#join-message)
+    - [ ] if you /join a channel you are already on, it should make that window active
+    - [ ] Setting: show nick address
 - [ ] MODE
 - [ ] MOTD
 - [X] NICK
@@ -176,6 +193,17 @@ Rejoined #keryx
 
 Should we show our own messages twice in Query window? Server + echo?
 
+- [ ] Channels with spaces? do we care? can you join just '#'
+```
+Status [ #keryx ]
+/join # cool
+
+: Status : #keryx [ # ]
+```
+
 
 ## Old Branch Notes
-[windows-001](/branch/windows-001.md): add WindowManager and supporting code
+
+[windows-002](/branch/002-styling-and-templates.md): add styling, templates, and color
+
+[windows-001](/branch/001-windows.md): add WindowManager and supporting code

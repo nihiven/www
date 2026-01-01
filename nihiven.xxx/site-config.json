@@ -1,5 +1,10 @@
 {
   "address": "nihiven.dev",
   "name": "nihiven",
-  "title": "nihiven >>"
+  "title": "nihiven >>",
+  "sidebarLinks": [
+    { "label": "Home", "url": "/" },
+    { "label": "Music", "url": "/music" },
+    { "label": "Links", "url": "/links" }
+  ]
 }

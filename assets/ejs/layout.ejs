@@ -7,7 +7,12 @@
   <%- include(localPath('ejs/partials/styles.ejs')) %>
 </head>
 <body>
-  <%- content %>
+  <% if (typeof sidebarHTML !== 'undefined' && sidebarHTML) { %>
+    <%- sidebarHTML %>
+  <% } %>
+  <main class="content-box">
+    <%- content %>
+  </main>
   <%- webRingHTML %>
 </body>
 </html>

@@ -70,24 +70,42 @@ const server = http.createServer(async (req, res) => {
     }
 
     // Clean up the URL path
-    let filePath = req.url === '/' ? '/index.md' : req.url;
+    let urlPath = req.url === '/' ? '/index' : req.url;
 
-    // Add .md extension if not present
-    if (!filePath.endsWith('.md')) {
-      filePath += '.md';
+    // Remove extension if present for consistent handling
+    if (urlPath.endsWith('.md') || urlPath.endsWith('.html')) {
+      urlPath = urlPath.replace(/\.(md|html)$/, '');
     }
 
-    // Remove leading slash and resolve path from custom md directory
-    filePath = path.join(mdDirectory, filePath.substring(1));
+    // Check for .html file first (in html/ directory), then fall back to .md
+    const htmlDirectory = path.join(path.dirname(mdDirectory), 'html');
+    const htmlPath = path.join(htmlDirectory, urlPath.substring(1) + '.html');
+    const mdPath = path.join(mdDirectory, urlPath.substring(1) + '.md');
 
-    // Read the markdown file
-    const content = fs.readFileSync(filePath, 'utf8');
+    let content;
+    let html;
 
-    // Convert to HTML
-    const html = marked.parse(content);
+    if (fs.existsSync(htmlPath)) {
+      // Serve HTML file directly (already HTML, no conversion needed)
+      content = fs.readFileSync(htmlPath, 'utf8');
+      html = content;
+    } else {
+      // Fall back to markdown file
+      content = fs.readFileSync(mdPath, 'utf8');
+      html = marked.parse(content);
+    }
 
     // Generate webring HTML
-    const webRingHTML = getWebRingHTML(siteConfig.name);
+    const webRingHTML = getWebRingHTML(siteConfig.name, siteConfig.webringSeparator);
+
+    // Generate sidebar HTML if configured
+    let sidebarHTML = '';
+    if (siteConfig.sidebarLinks && siteConfig.sidebarLinks.length > 0) {
+      const links = siteConfig.sidebarLinks
+        .map(link => `<a href="${link.url}">${link.label}</a>`)
+        .join('');
+      sidebarHTML = `<nav class="sidebar">${links}</nav>`;
+    }
 
     // Render page with EJS template
     ejs.renderFile(
@@ -96,6 +114,7 @@ const server = http.createServer(async (req, res) => {
         siteConfig,
         content: html,
         webRingHTML: webRingHTML,
+        sidebarHTML: sidebarHTML,
         localPath: localPath, // Pass helper to templates for local-first includes
       },
       (err, str) => {

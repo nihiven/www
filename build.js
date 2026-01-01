@@ -124,6 +124,18 @@ function buildHTMLTemplate(siteConfig, pageTitle, markdownHTML, minifiedCSS) {
       </div>`;
   }
 
+  // Build sidebar links HTML if they exist
+  let sidebarHTML = '';
+  if (siteConfig.sidebarLinks && siteConfig.sidebarLinks.length > 0) {
+    const links = siteConfig.sidebarLinks
+      .map(link => `<a href="${link.url}">${link.label}</a>`)
+      .join('');
+    sidebarHTML = `
+      <nav class="sidebar">
+        ${links}
+      </nav>`;
+  }
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -299,9 +311,51 @@ function buildHTMLTemplate(siteConfig, pageTitle, markdownHTML, minifiedCSS) {
       box-shadow: 0 0 15px var(--crt-glow);
       filter: brightness(1);
     }
+
+    /* Sidebar styling */
+    .sidebar {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar a {
+      padding: 7px 14px;
+      background: var(--crt-bg-dark);
+      border: 1px solid var(--crt-fg);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.76em;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .sidebar a:hover {
+      background: var(--crt-fg);
+      color: var(--crt-bg);
+      box-shadow: 0 0 15px var(--crt-glow);
+      filter: brightness(1);
+    }
+
+    @media (max-width: 1200px) {
+      .sidebar {
+        position: static;
+        transform: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+    }
   </style>
 </head>
 <body>
+  ${sidebarHTML}
   <div class="monitor crt crt-glow">
     <div class="site-header">
       <h1 class="crt-glow-strong">${siteConfig.name}<span class="crt-cursor"></span></h1>

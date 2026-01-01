@@ -9,9 +9,10 @@ const webringSites = JSON.parse(
 /**
  * Generate web ring HTML for a given site
  * @param {string} currentSite - samus.cam
+ * @param {string} separator - separator between links (default: ' : ')
  * @returns {string} HTML string for the web ring
  */
-function getWebRingHTML(currentSite) {
+function getWebRingHTML(currentSite, separator = ' : ') {
   const currentIndex = webringSites.findIndex(
     site => site.name === currentSite
   );
@@ -20,7 +21,7 @@ function getWebRingHTML(currentSite) {
   if (currentIndex === -1) {
     const links = webringSites
       .map(site => `<a href="${site.url}">${site.name}</a>`)
-      .join(' : ');
+      .join(separator);
 
     return `
       <div class="webring-container">
@@ -41,9 +42,9 @@ function getWebRingHTML(currentSite) {
   return `
     <div class="webring-container">
       <div>
-        <a href="${webringSites[prevIndex].url}">← ${webringSites[prevIndex].name}</a>
-        <a href="${randomSite.url}">random</a>
-        <a href="${webringSites[nextIndex].url}">${webringSites[nextIndex].name} →</a>
+        <a href="${webringSites[prevIndex].url}">&lt;&lt; ${webringSites[prevIndex].name}</a>
+        ${separator}<a href="${randomSite.url}">random</a>${separator}
+        <a href="${webringSites[nextIndex].url}">${webringSites[nextIndex].name} &gt;&gt;</a>
       </div>
     </div>
   `;
