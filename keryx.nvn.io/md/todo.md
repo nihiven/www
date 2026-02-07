@@ -58,21 +58,26 @@
     - [X] Handle 353 and 366
     - [X] Draw nicklist!
     - [X] TESTS
-- [ ] Settings
-    - [X] Basic
-    - [ ] API
-    - [ ] Window
 - [X] Break messages into a struct: timestmap, prefix, nick, content 
 - [X] Basic Color
 - [X] [styling-and-templates](./branch/002-styling-and-templates.md)
     - [X] Basic styling functions
     - [X] Basic Template function
 - [ ] QUIT
-    - [ ] Display disconnected messages in all channels+status when disconnected
     - [X] Show user quit messages
     - [X] remove user from nicklist
+- [ ] Settings
+    - [X] Basic
+    - [ ] API
+    - [ ] Window
+- [ ] Display disconnected messages in all channels+status when disconnected
+- [ ] Data Storage
+    - [ ] sqlite3 database (key/value with sections, similar to [dpr from my old mIRC script](https://github.com/nihiven/mirc-n2/blob/master/dpr.n2))
+        - [ ] get/set/init
+        - [ ] macro? set!() get!() ??
 
 ### <a name="planned"></a>Planned Items
+- [ ] I'm pretty far behind on tests. Keeping them up to date while still working on the bones of the app was crap. For instance, writing a ton of tests for window.rs before working out a decent Windowing interface. We'll have to do a test pass for the first release. 
 - [ ] Review: https://modern.ircdocs.horse/#message-parsing-and-assembly
 - [ ] Bar API
     - [ ] Multiple Types
@@ -87,17 +92,18 @@
     - [ ] Windows emoji entry doesn't work
 - [ ] Styled text
 - [ ] Timestamp
-    - [ ] format
-    - [ ] show hide
-    - [ ] 12 or 24 hour
+    - [ ] Configurable
+    - [X] format
+    - [X] show hide
+    - [X] 12 or 24 hour
 - [ ] Message Formatting
     - [ ] Events: JOIN, PART, NOTICE
-    - [ ] Timestamp
+    - [X] Timestamp
 - [ ] Channel Window
-    - [ ] PRIVMSG: Show users' channel mode (op, voice)
-    - [ ] Topic bar
-    - [ ] Nicklist
     - [ ] Compress like events into one line? JOIN/PART/PRIVMSG event?
+    - [X] PRIVMSG: Show users' channel mode (op, voice)
+    - [X] Nicklist
+    - [ ] ~~Topic bar~~
 - [ ] History
     - [ ] Channel
     - [ ] Editbox
@@ -146,6 +152,7 @@
     - [X] Remove user from nicklist
     - [ ] Setting: show nick address
 - [ ] PRIVMSG
+    - [X] Basic
 
 
 ### <a name="user_cmd"></a>User /Commands
@@ -154,6 +161,7 @@
 - [X] CLOSE
 - [ ] [CTCP](https://rawgit.com/DanielOaks/irc-rfcs/master/dist/draft-oakley-irc-ctcp-latest.html)
 - [ ] ECHO
+    - [X] Basic
 - [ ] [JOIN](https://modern.ircdocs.horse/#join-message)
     - [ ] if you /join a channel you are already on, it should make that window active
     - [ ] Setting: show nick address

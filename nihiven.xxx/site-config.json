@@ -5,6 +5,7 @@
   "sidebarLinks": [
     { "label": "Home", "url": "/" },
     { "label": "Music", "url": "/music" },
+    { "label": "Miami Vice", "url": "/vice" },
     { "label": "Links", "url": "/links" }
   ]
 }

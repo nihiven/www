@@ -1,3 +1,18 @@
+
+**2026-02-06**
+
+- removed hardcoded PONG replies
+- minor change to styling
+
+![Keryx Current State](/assets/img/keryx-screenshot-0007.png)
+
+**2026-01-11**
+
+- Channel topic display!
+- TOPIC
+
+![January 11, 2026](/assets/img/keryx-screenshot-0006.png)
+
 **2025-12-28**
 
 - Styling and templates!
