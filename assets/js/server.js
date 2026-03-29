@@ -69,6 +69,47 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // Serve static subdirectories (e.g. /agentic -> agentic/index.html)
+    const siteDir = process.cwd();
+    const cleanUrl = req.url.split('?')[0].split('#')[0];
+    const urlParts = cleanUrl.split('/').filter(Boolean);
+    if (urlParts.length > 0) {
+      const subDir = path.join(siteDir, urlParts[0]);
+      const subDirIndex = path.join(subDir, 'index.html');
+      if (fs.existsSync(subDirIndex) && fs.statSync(subDir).isDirectory()) {
+        // Serve files from this static subdirectory
+        const subPath = urlParts.slice(1).join('/') || 'index.html';
+        const filePath = path.join(subDir, subPath);
+        // Prevent directory traversal
+        if (!filePath.startsWith(subDir)) {
+          res.writeHead(403, { 'Content-Type': 'text/plain' });
+          res.end('403 - Forbidden');
+          return;
+        }
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          const ext = path.extname(filePath);
+          const mimeTypes = {
+            '.html': 'text/html',
+            '.js': 'application/javascript',
+            '.css': 'text/css',
+            '.json': 'application/json',
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.gif': 'image/gif',
+            '.svg': 'image/svg+xml',
+            '.ico': 'image/x-icon',
+            '.woff': 'font/woff',
+            '.woff2': 'font/woff2',
+          };
+          const contentType = mimeTypes[ext] || 'application/octet-stream';
+          res.writeHead(200, { 'Content-Type': contentType });
+          fs.createReadStream(filePath).pipe(res);
+          return;
+        }
+      }
+    }
+
     // Clean up the URL path
     let urlPath = req.url === '/' ? '/index' : req.url;
 
